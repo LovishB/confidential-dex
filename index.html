@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShadowDEX</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #000000;
+            color: #fff;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 10px;
+            height: 100%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 12px 0;
+            gap: 40px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            margin-left: 20px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav button {
+            background: none;
+            border: none;
+            color: #b514ed;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: normal;
+        }
+
+        .nav button.active {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .nav button:hover {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .content {
+            margin-top: 20px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .swap-container, .pools-container {
+            background-color: #000000;
+            padding: 24px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .pools-container {
+            max-width: 800px;
+        }
+
+        .add-liquidity-section {
+            display: none;
+            margin-bottom: 32px;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .liquidity-inputs {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .liquidity-box {
+            flex: 1;
+            background-color: #1a1a1a;
+            border-radius: 16px;
+            padding: 10px;
+            min-height: 100px;
+            border: 1px solid #333;
+            margin-bottom: 6px;
+        }
+
+        .add-liquidity-button {
+            background-color: #b514ed;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-right: 10px;
+            width: 150px;
+        }
+
+        .add-liquidity-button:hover {
+            background-color: #444;
+        }
+
+        .swap-box {
+            background-color: #000;
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 6px;
+            min-height: 100px;
+            border: 1px solid #333;
+        }
+
+        .swap-box.buy-box {
+            background-color: #1a1a1a;
+        }
+
+        .swap-box.buy-box input {
+            background-color: #1a1a1a;
+        }
+
+        .swap-label {
+            color: #666;
+            font-size: 18px;
+            font-weight: normal;
+            margin-bottom: 0px;
+        }
+
+        .input-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .amount-input {
+            flex: 0.7;
+            height: 80px;
+        }
+
+        .amount-input input {
+            height: 100%;
+            font-size: 24px;
+        }
+
+        .token-select {
+            flex: 0.3;
+            box-shadow: 0 4px 8px rgba(128, 128, 128, 0.3);
+            border-radius: 36px;
+            padding: 2px;
+            position: relative;
+        }
+
+        .token-select select {
+            border: 1px solid #333;
+            box-shadow: none;
+            padding-left: 35px;
+            border-radius: 28px;
+        }
+
+        .liquidity-token-select {
+            flex: 0.4;
+            box-shadow: 0 4px 8px rgba(128, 128, 128, 0.3);
+            border-radius: 12px;
+            padding: 2px;
+            position: relative;
+        }
+
+        .liquidity-token-select select {
+            border: 1px solid #333;
+            box-shadow: none;
+            padding-left: 35px;
+            border-radius: 12px;
+        }
+
+        .token-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+        }
+
+        select {
+            background-color: #000;
+            border: none;
+            color: #fff;
+            padding: 6px;
+            border-radius: 36px;
+            width: 100%;
+            font-size: 16px;
+            height: 40px;
+        }
+
+        input {
+            background-color: #000;
+            border: none;
+            color: #fff;
+            padding: 6px;
+            border-radius: 24px;
+            width: 100%;
+            font-size: 30px;
+            height: 60px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+        }
+
+        .swap-button, .deposit-button {
+            background-color: #b514ed;
+            color: #fff;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .swap-button:hover, .deposit-button:hover {
+            background-color: #444;
+        }
+
+        .liquidity-box input {
+            background-color: #1a1a1a;
+        }
+
+        .pools-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .pools-table th, .pools-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        .pools-table th {
+            color: #fff;
+            font-weight: normal;
+            background-color: #1a1a1a;
+        }
+
+        .pools-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pool-pair {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pool-pair img {
+            width: 24px;
+            height: 24px;
+        }
+
+        h2, h4 {
+            color: #fff;
+            margin-bottom: 16px;
+            margin-left: 6px;
+            font-weight: normal;
+        }
+
+        h3 {
+            color: #fff;
+            margin-left: 6px;
+            font-weight: normal;
+        }
+
+        spline-viewer {
+            height: 1050px;
+            margin-bottom: 100px;
+        }
+
+        @media screen and (max-width: 1200px) {
+            spline-viewer {
+                height: 800px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            spline-viewer {
+                height: 600px;
+                margin-bottom: 50px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            spline-viewer {
+                height: 400px;
+                margin-bottom: 30px;
+            }
+        }
+
+        .swap-container p {
+            color: #666;
+            font-weight: normal;
+            font-size: 15px;
+            margin-top: 30px;
+            text-align: start;
+        }
+
+        .pools-container p {
+            color: #666;
+            font-weight: normal;
+            font-size: 16px;
+            margin-top: 4px;
+            margin-bottom: 16px;
+            margin-left: 6px;
+            text-align: start;
+        }
+
+        .pools-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .pools-header h2 {
+            margin: 0;
+            line-height: 1;
+        }
+
+        .liquidity-options {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+            margin-bottom: 16px;
+            width: 50%;
+        }
+
+        .reward-input {
+            flex: 1;
+            background-color: #000;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 6px;
+            color: #fff;
+            font-size: 16px;
+            height: 40px;
+        }
+
+        .compliance-select {
+            flex: 1;
+            background-color: #000;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 6px;
+            color: #fff;
+            font-size: 16px;
+            height: 40px;
+        }
+
+        .compliance-checkbox {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            background-color: #000;
+            gap: 8px;
+            width: 100%;
+            margin-left: 6px;
+            margin-bottom: 10px;
+        }
+
+        .compliance-checkbox input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            accent-color: #b514ed;
+            cursor: pointer;
+        }
+
+        .compliance-checkbox label {
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">ShadowDEX</div>
+            <nav class="nav">
+                <button class="active" onclick="showPage('home')">Home</button>
+                <button onclick="showPage('swap')">Swap</button>
+                <button onclick="showPage('pools')">Pools</button>
+            </nav>
+        </header>
+
+        <main class="content">
+            <div id="home-page">
+                <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.85/build/spline-viewer.js"></script>
+                <spline-viewer url="https://prod.spline.design/nYVVB2uozayc752d/scene.splinecode"></spline-viewer>
+            </div>
+
+            <div id="swap-page" class="swap-container" style="display: none;">
+                <h2>Confidential Swap</h2>
+                <div class="swap-box">
+                    <div class="swap-label">Sell</div>
+                    <div class="input-row">
+                        <div class="amount-input">
+                            <input type="number" id="from-amount" placeholder="0">
+                        </div>
+                        <div class="token-select">
+                            <img src="https://token-icons.s3.amazonaws.com/eth.png" alt="Ethereum Logo" class="token-icon">
+                            <select id="from-token">
+                                <option value="ETH">ETH</option>
+                                <option value="USDT">USDT</option>
+                                <option value="USDC">USDC</option>
+                                <option value="WBTC">WBTC</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="swap-box buy-box">
+                    <div class="swap-label">Buy</div>
+                    <div class="input-row">
+                        <div class="amount-input">
+                            <input type="number" id="to-amount" placeholder="0" readonly>
+                        </div>
+                        <div class="token-select">
+                            <img src="https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694" alt="Ethereum Logo" class="token-icon">
+                            <select id="to-token">
+                                <option value="USDT">USDT</option>
+                                <option value="ETH">ETH</option>
+                                <option value="USDC">USDC</option>
+                                <option value="WBTC">WBTC</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button class="swap-button" onclick="handleSwap()">Swap</button>
+                <p>Swap is powered by Token-2022 Confidential Balances. Transaction amounts are encrypted using zk-proofs, while maintaining on-chain verifiability</p>
+            </div>
+
+            <div id="pools-page" class="pools-container" style="display: none;">                
+                <div id="add-liquidity-section" class="add-liquidity-section">
+                    <h3>Select Pairs</h3>
+                    <p>Choose the tokens you want to provide liquidity for</p>
+                    <div class="input-group">
+                        <div class="liquidity-inputs">
+                            <div class="liquidity-box">
+                                <div class="swap-label">Token 1</div>
+                                <div class="input-row">
+                                    <div class="amount-input">
+                                        <input type="number" id="pool-amount-1" placeholder="0">
+                                    </div>
+                                    <div class="liquidity-token-select">
+                                        <img src="https://token-icons.s3.amazonaws.com/eth.png" alt="Ethereum Logo" class="token-icon">
+                                        <select id="pool-token-1">
+                                            <option value="ETH">ETH</option>
+                                            <option value="USDT">USDT</option>
+                                            <option value="USDC">USDC</option>
+                                            <option value="WBTC">WBTC</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="liquidity-box">
+                                <div class="swap-label">Token 2</div>
+                                <div class="input-row">
+                                    <div class="amount-input">
+                                        <input type="number" id="pool-amount-2" placeholder="0">
+                                    </div>
+                                    <div class="liquidity-token-select">
+                                        <img src="https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694" alt="USDC Logo" class="token-icon">
+                                        <select id="pool-token-2">
+                                            <option value="USDC">USDC</option>
+                                            <option value="ETH">ETH</option>
+                                            <option value="USDT">USDT</option>
+                                            <option value="WBTC">WBTC</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>Reward Tier</h3>
+                        <p>The amount earned providing liquidity. Choose an amount that suits your risk tolerance and strategy.</p>
+                        <div class="liquidity-options">
+                            <input type="text" class="reward-input" placeholder="0.3% you will earn in fees" readonly>
+                        </div>
+
+                        <h3>Compliance</h3>
+                        <div class="liquidity-options">
+                            <div class="compliance-checkbox">
+                                <input type="checkbox" id="compliance-toggle" class="compliance-input">
+                                <label for="compliance-toggle">Include Compliance with "Transfer hooks"</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="deposit-button" onclick="handleDeposit()">Deposit</button>
+                    <p class="pool-p">Confidential liquidity pools with Token-2022 enable private, encrypted liquity management on Solana through zero-knowledge proofs and confidential balances.</p>
+                </div>
+
+                <div class="pools-header">
+                    <h2>Top Confidential Pools by TVL</h2>
+                    <button class="add-liquidity-button" onclick="toggleAddLiquidity()">+ Add Liquidity</button>
+                </div>
+                <table class="pools-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Pool</th>
+                            <th>TVL</th>
+                            <th>Reward</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pools-table-body">
+                        <!-- Pool rows will be added dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sample pool data
+        const pools = [
+            { pair: 'ETH/USDT', tvl: '$1,234,567', reward: '0.3%' },
+            { pair: 'ETH/USDC', tvl: '$987,654', reward: '0.3%' },
+            { pair: 'WBTC/ETH', tvl: '$456,789', reward: '0.3%' }
+        ];
+
+        // Initialize pools table
+        function initializePoolsTable() {
+            const tableBody = document.getElementById('pools-table-body');
+            tableBody.innerHTML = pools.map((pool, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td class="pool-pair">
+                        <img src="https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694" alt="ETH">
+                        ${pool.pair}
+                    </td>
+                    <td>${pool.tvl}</td>
+                    <td>${pool.reward}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Show/hide pages
+        function showPage(page) {
+            document.getElementById('home-page').style.display = page === 'home' ? 'block' : 'none';
+            document.getElementById('swap-page').style.display = page === 'swap' ? 'block' : 'none';
+            document.getElementById('pools-page').style.display = page === 'pools' ? 'block' : 'none';
+            
+            // Update active button
+            document.querySelectorAll('.nav button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Handle swap
+        function handleSwap() {
+            const fromToken = document.getElementById('from-token').value;
+            const fromAmount = document.getElementById('from-amount').value;
+            const toToken = document.getElementById('to-token').value;
+
+            if (!fromAmount || fromAmount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+
+            // Simulate swap calculation (in real app, this would call smart contract)
+            const mockRate = 1800; // Example rate
+            const toAmount = fromAmount * mockRate;
+            document.getElementById('to-amount').value = toAmount.toFixed(2);
+
+            alert(`Swapping ${fromAmount} ${fromToken} for ${toAmount.toFixed(2)} ${toToken}`);
+        }
+
+        // Handle deposit
+        function handleDeposit() {
+            const token1 = document.getElementById('pool-token-1').value;
+            const token2 = document.getElementById('pool-token-2').value;
+            const amount1 = document.getElementById('pool-amount-1').value;
+            const amount2 = document.getElementById('pool-amount-2').value;
+
+            if (!amount1 || !amount2 || amount1 <= 0 || amount2 <= 0) {
+                alert('Please enter valid amounts for both tokens');
+                return;
+            }
+
+            alert(`Depositing ${amount1} ${token1} and ${amount2} ${token2} to pool`);
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            initializePoolsTable();
+        });
+
+        function toggleAddLiquidity() {
+            const section = document.getElementById('add-liquidity-section');
+            const button = document.querySelector('.add-liquidity-button');
+            if (section.style.display === 'none' || !section.style.display) {
+                section.style.display = 'block';
+                button.textContent = '- Add Liquidity';
+            } else {
+                section.style.display = 'none';
+                button.textContent = '+ Add Liquidity';
+            }
+        }
+    </script>
+</body>
+</html>
