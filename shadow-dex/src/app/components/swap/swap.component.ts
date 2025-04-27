@@ -1,13 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { WalletService } from '../../services/wallet.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-swap',
   templateUrl: './swap.component.html',
   styleUrls: ['./swap.component.scss']
 })
-export class SwapComponent {
-  // Handler for swap button click
-  handleSwap(): void {
+export class SwapComponent implements OnInit, OnDestroy {
+  isWalletConnected = false;
+  private walletSubscription: Subscription = new Subscription();
+
+  constructor(private walletService: WalletService) {}
+
+  ngOnInit() {
+    this.walletSubscription = this.walletService.walletConnected$.subscribe(
+      connected => {
+        this.isWalletConnected = connected;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    if (this.walletSubscription) {
+      this.walletSubscription.unsubscribe();
+    }
+  }
+
+  async connectWallet() {
+    await this.walletService.connectWallet();
+  }
+
+  handleSwap() {
     const fromToken = (document.getElementById('from-token') as HTMLSelectElement).value;
     const fromAmount = (document.getElementById('from-amount') as HTMLInputElement).value;
     const toToken = (document.getElementById('to-token') as HTMLSelectElement).value;

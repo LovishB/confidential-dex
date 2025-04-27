@@ -1,7 +1,7 @@
 <!-- This file contains the HTML template for the PoolsComponent. -->
 
 <div class="pools-container">                
-  <div id="add-liquidity-section" class="add-liquidity-section" [style.display]="showAddLiquidity ? 'block' : 'none'">
+  <div id="add-liquidity-section" class="add-liquidity-section" [style.display]="showAddLiquidity && isWalletConnected ? 'block' : 'none'">
     <h3>Select Pairs</h3>
     <p>Choose the tokens you want to provide liquidity for</p>
     <div class="input-group">
@@ -62,7 +62,7 @@
   <div class="pools-header">
     <h2>Top Confidential Pools by TVL</h2>
     <button class="add-liquidity-button" (click)="toggleAddLiquidity()">
-      {{ showAddLiquidity ? '- Add Liquidity' : '+ Add Liquidity' }}
+      {{ !isWalletConnected ? 'Connect Wallet' : showAddLiquidity ? '- Add Liquidity' : '+ Add Liquidity' }}
     </button>
   </div>
   <table class="pools-table">
