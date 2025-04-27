@@ -1,12 +1,7 @@
-<!-- filepath: /shadow-dex/shadow-dex/src/app/app.component.html -->
 <div class="container">
     <header class="header">
         <div class="logo">ShadowDEX</div>
-        <nav class="nav">
-            <button class="active" onclick="showPage('home')">Home</button>
-            <button onclick="showPage('swap')">Swap</button>
-            <button onclick="showPage('pools')">Pools</button>
-        </nav>
+        
     </header>
 
     <main class="content">
@@ -131,6 +126,44 @@
                     <!-- Pool rows will be added dynamically -->
                 </tbody>
             </table>
+        </div>
+
+        <div id="activate-cb-page" class="activate-cb-container" style="display: none;">
+            <h2>Activate Confidential Balances</h2>
+            <div class="activate-box">
+                <p>Enable confidential balances for your tokens to maintain privacy while trading on ShadowDEX.</p>
+                <div class="token-selection">
+                    <h3>Select tokens to activate:</h3>
+                    <div class="token-options">
+                        <div class="token-option">
+                            <input type="checkbox" id="eth-cb" class="token-checkbox">
+                            <img src="https://token-icons.s3.amazonaws.com/eth.png" alt="Ethereum Logo" class="token-icon">
+                            <label for="eth-cb">ETH</label>
+                        </div>
+                        <div class="token-option">
+                            <input type="checkbox" id="usdt-cb" class="token-checkbox">
+                            <img src="https://coin-images.coingecko.com/coins/images/325/large/Tether.png" alt="USDT Logo" class="token-icon">
+                            <label for="usdt-cb">USDT</label>
+                        </div>
+                        <div class="token-option">
+                            <input type="checkbox" id="usdc-cb" class="token-checkbox">
+                            <img src="https://coin-images.coingecko.com/coins/images/6319/large/usdc.png" alt="USDC Logo" class="token-icon">
+                            <label for="usdc-cb">USDC</label>
+                        </div>
+                        <div class="token-option">
+                            <input type="checkbox" id="wbtc-cb" class="token-checkbox">
+                            <img src="https://coin-images.coingecko.com/coins/images/7598/large/wrapped_bitcoin_wbtc.png" alt="WBTC Logo" class="token-icon">
+                            <label for="wbtc-cb">WBTC</label>
+                        </div>
+                    </div>
+                </div>
+                <button class="activate-button" onclick="activateConfidentialBalances()">Activate Selected Tokens</button>
+                <div class="info-box">
+                    <h4>How it works:</h4>
+                    <p>Confidential balances use zero-knowledge proofs to encrypt your token amounts on-chain while maintaining full verifiability. 
+                    Only you can see your actual balances, while other users can verify transactions without seeing the amounts.</p>
+                </div>
+            </div>
         </div>
     </main>
 </div>

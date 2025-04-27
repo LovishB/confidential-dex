@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subject, takeUntil, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { WalletService } from '../../services/wallet.service';
 import { TokenService } from '../../services/token.service';
 
@@ -14,7 +13,6 @@ export class ActivateCbComponent implements OnInit, OnDestroy {
   tokens: any[] = [];
   selectedToken: any = null;
   isLoading = false;
-  configureForm: FormGroup;
   isConfiguring = false;
   hasConfigured = false;
   errorMessage: string | null = null;
@@ -23,13 +21,8 @@ export class ActivateCbComponent implements OnInit, OnDestroy {
 
   constructor(
     private walletService: WalletService,
-    private tokenService: TokenService,
-    private fb: FormBuilder
-  ) {
-    this.configureForm = this.fb.group({
-      token: ['']
-    });
-  }
+    private tokenService: TokenService
+  ) {}
 
   ngOnInit(): void {
     this.walletSubscription = this.walletService.walletConnected$.subscribe(
@@ -77,7 +70,6 @@ export class ActivateCbComponent implements OnInit, OnDestroy {
 
   onTokenSelect(token: any): void {
     this.selectedToken = token;
-    this.configureForm.get('token')?.setValue(token.mintAddress);
   }
 
   async activateConfidentialBalances(): Promise<void> {

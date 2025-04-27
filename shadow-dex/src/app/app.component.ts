@@ -10,6 +10,7 @@ import { Component } from '@angular/core';
           <a [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
           <a [routerLink]="['/swap']" routerLinkActive="active">Swap</a>
           <a [routerLink]="['/pools']" routerLinkActive="active">Pools</a>
+          <a [routerLink]="['/activate-confidential']" routerLinkActive="active">Activate Token</a>
         </nav>
       </div>
       <div class="content">
@@ -19,7 +20,6 @@ import { Component } from '@angular/core';
   `,
   styles: [`
     .container {
-      padding: 20px;
       color: white;
       background-color: #000;
       min-height: 100vh;
