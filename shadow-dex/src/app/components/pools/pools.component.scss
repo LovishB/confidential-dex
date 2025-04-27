@@ -1,0 +1,259 @@
+.pools-container {
+  background-color: #000000;
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.add-liquidity-section {
+  margin-bottom: 32px;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.liquidity-inputs {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.liquidity-box {
+  flex: 1;
+  background-color: #1a1a1a;
+  border-radius: 16px;
+  padding: 10px;
+  min-height: 100px;
+  border: 1px solid #333;
+  margin-bottom: 6px;
+}
+
+.add-liquidity-button {
+  background-color: #b514ed;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s;
+  margin-right: 10px;
+  width: 150px;
+}
+
+.add-liquidity-button:hover {
+  background-color: #444;
+}
+
+.swap-label {
+  color: #666;
+  font-size: 18px;
+  font-weight: normal;
+  margin-bottom: 0px;
+}
+
+.input-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.amount-input {
+  flex: 0.7;
+  height: 80px;
+}
+
+.amount-input input {
+  height: 100%;
+  font-size: 24px;
+}
+
+.liquidity-token-select {
+  flex: 0.4;
+  box-shadow: 0 4px 8px rgba(128, 128, 128, 0.3);
+  border-radius: 12px;
+  padding: 2px;
+  position: relative;
+}
+
+.liquidity-token-select select {
+  border: 1px solid #333;
+  box-shadow: none;
+  padding-left: 35px;
+  border-radius: 12px;
+}
+
+.token-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+select {
+  background-color: #000;
+  border: none;
+  color: #fff;
+  padding: 6px;
+  border-radius: 36px;
+  width: 100%;
+  font-size: 16px;
+  height: 40px;
+}
+
+input {
+  background-color: #000;
+  border: none;
+  color: #fff;
+  padding: 6px;
+  border-radius: 24px;
+  width: 100%;
+  font-size: 30px;
+  height: 60px;
+}
+
+input:focus, select:focus {
+  outline: none;
+}
+
+.deposit-button {
+  background-color: #b514ed;
+  color: #fff;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  width: 100%;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.deposit-button:hover {
+  background-color: #444;
+}
+
+.liquidity-box input {
+  background-color: #1a1a1a;
+}
+
+.pools-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid #333;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.pools-table th, .pools-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.pools-table th {
+  color: #fff;
+  font-weight: normal;
+  background-color: #1a1a1a;
+}
+
+.pools-table tr:last-child td {
+  border-bottom: none;
+}
+
+.pool-pair {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pool-pair img {
+  width: 24px;
+  height: 24px;
+}
+
+h2, h4 {
+  color: #fff;
+  margin-bottom: 16px;
+  margin-left: 6px;
+  font-weight: normal;
+}
+
+h3 {
+  color: #fff;
+  margin-left: 6px;
+  font-weight: normal;
+}
+
+.pools-container p {
+  color: #666;
+  font-weight: normal;
+  font-size: 16px;
+  margin-top: 4px;
+  margin-bottom: 16px;
+  margin-left: 6px;
+  text-align: start;
+}
+
+.pools-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.pools-header h2 {
+  margin: 0;
+  line-height: 1;
+}
+
+.liquidity-options {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  width: 50%;
+}
+
+.reward-input {
+  flex: 1;
+  background-color: #000;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 6px;
+  color: #fff;
+  font-size: 16px;
+  height: 40px;
+}
+
+.compliance-checkbox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #000;
+  gap: 8px;
+  width: 100%;
+  margin-left: 6px;
+  margin-bottom: 10px;
+}
+
+.compliance-checkbox input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #b514ed;
+  cursor: pointer;
+}
+
+.compliance-checkbox label {
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}

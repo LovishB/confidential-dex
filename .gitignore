@@ -1,0 +1,5 @@
+.env
+shadow-dex/.angular
+shadow-dex/.env
+shadow-dex/.env.local
+shadow-dex/node_modules

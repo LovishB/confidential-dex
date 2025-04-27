@@ -1,0 +1,89 @@
+<!-- This file contains the HTML template for the PoolsComponent. -->
+
+<div class="pools-container">                
+  <div id="add-liquidity-section" class="add-liquidity-section" [style.display]="showAddLiquidity ? 'block' : 'none'">
+    <h3>Select Pairs</h3>
+    <p>Choose the tokens you want to provide liquidity for</p>
+    <div class="input-group">
+      <div class="liquidity-inputs">
+        <div class="liquidity-box">
+          <div class="swap-label">Token 1</div>
+          <div class="input-row">
+            <div class="amount-input">
+              <input type="number" id="pool-amount-1" placeholder="0">
+            </div>
+            <div class="liquidity-token-select">
+              <img src="https://token-icons.s3.amazonaws.com/eth.png" alt="Ethereum Logo" class="token-icon">
+              <select id="pool-token-1">
+                <option value="ETH">ETH</option>
+                <option value="USDT">USDT</option>
+                <option value="USDC">USDC</option>
+                <option value="WBTC">WBTC</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="liquidity-box">
+          <div class="swap-label">Token 2</div>
+          <div class="input-row">
+            <div class="amount-input">
+              <input type="number" id="pool-amount-2" placeholder="0">
+            </div>
+            <div class="liquidity-token-select">
+              <img src="https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694" alt="USDC Logo" class="token-icon">
+              <select id="pool-token-2">
+                <option value="USDC">USDC</option>
+                <option value="ETH">ETH</option>
+                <option value="USDT">USDT</option>
+                <option value="WBTC">WBTC</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h3>Reward Tier</h3>
+      <p>The amount earned providing liquidity. Choose an amount that suits your risk tolerance and strategy.</p>
+      <div class="liquidity-options">
+        <input type="text" class="reward-input" placeholder="0.3% you will earn in fees" readonly>
+      </div>
+
+      <h3>Compliance</h3>
+      <div class="liquidity-options">
+        <div class="compliance-checkbox">
+          <input type="checkbox" id="compliance-toggle" class="compliance-input">
+          <label for="compliance-toggle">Include Compliance with "Transfer hooks"</label>
+        </div>
+      </div>
+    </div>
+    <button class="deposit-button" (click)="handleDeposit()">Deposit</button>
+    <p class="pool-p">Confidential liquidity pools with Token-2022 enable private, encrypted liquity management on Solana through zero-knowledge proofs and confidential balances.</p>
+  </div>
+
+  <div class="pools-header">
+    <h2>Top Confidential Pools by TVL</h2>
+    <button class="add-liquidity-button" (click)="toggleAddLiquidity()">
+      {{ showAddLiquidity ? '- Add Liquidity' : '+ Add Liquidity' }}
+    </button>
+  </div>
+  <table class="pools-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Pool</th>
+        <th>TVL</th>
+        <th>Reward</th>
+      </tr>
+    </thead>
+    <tbody id="pools-table-body">
+      <tr *ngFor="let pool of pools; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td class="pool-pair">
+          <img src="https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694" alt="ETH">
+          {{ pool.pair }}
+        </td>
+        <td>{{ pool.tvl }}</td>
+        <td>{{ pool.reward }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
