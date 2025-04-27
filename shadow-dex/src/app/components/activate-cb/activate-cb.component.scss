@@ -1,0 +1,239 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.card {
+  background: var(--card-background, #1a1a2e);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  
+  h2 {
+    margin: 0;
+    color: var(--primary-text, #ffffff);
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  .subtitle {
+    margin: 8px 0 0;
+    color: var(--secondary-text, #a0a0b0);
+    font-size: 0.9rem;
+  }
+}
+
+.card-content {
+  padding: 24px;
+}
+
+.section {
+  margin-bottom: 24px;
+  
+  h3 {
+    margin: 0 0 12px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--primary-text, #ffffff);
+  }
+  
+  .info-text {
+    margin: 0 0 16px;
+    color: var(--secondary-text, #a0a0b0);
+    font-size: 0.9rem;
+  }
+}
+
+.token-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.token-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  &.selected {
+    background-color: rgba(var(--primary-color-rgb, 75, 105, 255), 0.2);
+  }
+  
+  .token-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 12px;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  
+  .token-details {
+    flex: 1;
+    
+    .token-name {
+      font-weight: 500;
+      color: var(--primary-text, #ffffff);
+    }
+    
+    .token-balance {
+      font-size: 0.85rem;
+      color: var(--secondary-text, #a0a0b0);
+    }
+  }
+}
+
+.no-tokens-message {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--secondary-text, #a0a0b0);
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  color: var(--secondary-text, #a0a0b0);
+  
+  .spinner {
+    margin-bottom: 16px;
+  }
+}
+
+.primary-button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--primary-color, #4b69ff), var(--secondary-color, #6942ef));
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  &:hover {
+    opacity: 0.9;
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
+  
+  &:disabled {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: not-allowed;
+  }
+}
+
+.secondary-button {
+  width: 100%;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: white;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  text-align: center;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.error-message {
+  padding: 12px;
+  margin-top: 16px;
+  background-color: rgba(255, 87, 87, 0.2);
+  border-radius: 8px;
+  color: #ff5757;
+  font-size: 0.9rem;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spinner 0.8s linear infinite;
+}
+
+.success-section {
+  text-align: center;
+  padding: 32px 16px;
+  
+  .success-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    background: rgba(39, 174, 96, 0.2);
+    color: #27ae60;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+  }
+  
+  h3 {
+    color: #27ae60;
+    margin-bottom: 12px;
+  }
+  
+  p {
+    margin-bottom: 24px;
+    color: var(--secondary-text, #a0a0b0);
+  }
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}

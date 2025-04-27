@@ -5,19 +5,26 @@ import { HomeComponent } from './components/home/home.component';
 import { SwapComponent } from './components/swap/swap.component';
 import { PoolsComponent } from './components/pools/pools.component';
 import { AppRoutingModule } from './app-routing.module'; // Add this import
+import { ActivateCbComponent } from './components/activate-cb/activate-cb.component';
+import { WalletService } from './services/wallet.service';
+import { TokenService } from './services/token.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     SwapComponent,
-    PoolsComponent
+    PoolsComponent,
+    ActivateCbComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule // Add this line
   ],
-  providers: [],
+  providers: [
+    WalletService,
+    TokenService
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -1,0 +1,75 @@
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h2>Activate Confidential Balances</h2>
+      <p class="subtitle">Configure Token-2022 confidential balances extension</p>
+    </div>
+
+    <div class="card-content">
+      <!-- Wallet Connection -->
+      <div class="section" *ngIf="!isWalletConnected">
+        <button 
+          class="primary-button full-width" 
+          (click)="connectWallet()" 
+          [disabled]="isLoading">
+          <span *ngIf="!isLoading">Connect Wallet</span>
+          <span *ngIf="isLoading" class="spinner"></span>
+        </button>
+      </div>
+
+      <!-- Token Selection -->
+      <div class="section" *ngIf="isWalletConnected && !hasConfigured">
+        <h3>Select Token</h3>
+        <p class="info-text">Choose a Token-2022 token to enable confidential balances</p>
+
+        <div class="token-list" *ngIf="tokens.length > 0; else noTokens">
+          <div 
+            *ngFor="let token of tokens" 
+            class="token-item" 
+            [class.selected]="selectedToken?.mintAddress === token.mintAddress"
+            (click)="onTokenSelect(token)">
+            <div class="token-icon">
+              <img [src]="token.logoURI || 'assets/images/default-token.png'" alt="{{ token.symbol }}">
+            </div>
+            <div class="token-details">
+              <div class="token-name">{{ token.symbol }}</div>
+              <div class="token-balance">{{ token.balance | number:'1.0-6' }}</div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noTokens>
+          <div class="no-tokens-message" *ngIf="!isLoading">
+            <p>No Token-2022 tokens found in your wallet.</p>
+          </div>
+          <div class="loading" *ngIf="isLoading">
+            <div class="spinner"></div>
+            <p>Loading tokens...</p>
+          </div>
+        </ng-template>
+
+        <!-- Configure Button -->
+        <button 
+          class="primary-button full-width" 
+          [disabled]="!selectedToken || isConfiguring" 
+          (click)="activateConfidentialBalances()">
+          <span *ngIf="!isConfiguring">Activate Confidential Balances</span>
+          <span *ngIf="isConfiguring" class="spinner"></span>
+        </button>
+      </div>
+
+      <!-- Success Message -->
+      <div class="section success-section" *ngIf="hasConfigured">
+        <div class="success-icon">✓</div>
+        <h3>Successfully Configured!</h3>
+        <p>Confidential balances are now active for {{ selectedToken?.symbol }}</p>
+        <button class="secondary-button" routerLink="/swap">Go to Swap</button>
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+    </div>
+  </div>
+</div>

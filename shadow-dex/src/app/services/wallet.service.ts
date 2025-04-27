@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 
 declare global {
   interface Window {
@@ -15,8 +16,12 @@ export class WalletService {
   public walletConnected$ = this.walletConnectedSubject.asObservable();
   
   public walletAddress: string | null = null;
+  private connection: Connection;
 
   constructor() {
+    // Initialize connection to Solana network
+    this.connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+    
     // Check if wallet was previously connected
     this.checkConnection();
   }
@@ -57,5 +62,28 @@ export class WalletService {
       this.walletAddress = null;
       this.walletConnectedSubject.next(false);
     }
+  }
+  
+  /**
+   * Returns the Solana connection instance
+   */
+  getConnection(): Connection {
+    return this.connection;
+  }
+  
+  /**
+   * Returns the connected wallet's public key
+   * If no wallet is connected, returns null
+   */
+  getPublicKey(): PublicKey | null {
+    if (this.walletAddress) {
+      try {
+        return new PublicKey(this.walletAddress);
+      } catch (error) {
+        console.error('Invalid wallet address', error);
+        return null;
+      }
+    }
+    return null;
   }
 }
