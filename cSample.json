@@ -1,0 +1,14 @@
+{
+    "name": "Confidential Sample Coin",
+    "symbol": "cSAMPLE",
+    "description": "Confidential Sample Coin",
+    "image": "https://cdn-icons-png.flaticon.com/512/3212/3212567.png",
+    "properties": {
+      "files": [
+        {
+          "uri": "https://cdn-icons-png.flaticon.com/512/3212/3212567.png",
+          "type": "image/png"
+        }
+      ]
+    }
+  }

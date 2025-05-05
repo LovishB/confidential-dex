@@ -1,11 +1,78 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
+import { LiquidityPoolService } from './services/liquidity-pool.service';
+import { SwapService } from './services/swap.service';
 
 @Controller()
 export class AppController {
-  constructor() {}
+  constructor(
+    private readonly liquidityPoolService: LiquidityPoolService,
+    private readonly swapService: SwapService
+  ) {}
 
   @Get()
-  getHello(): string {
-    return "Hello World!";
+  getServerStatus(): string {
+    return "SERVER IS UP AND RUNNING";
+  }
+
+  @Post('quote')
+  async getQuote(
+    @Body() quoteData: {
+      tokenAMintAddress: string;
+      tokenBMintAddress: string;
+      tokenAAmount: number;
+    }
+  ) {
+    const { tokenAMintAddress, tokenBMintAddress, tokenAAmount } = quoteData;
+    
+    const estimatedAmount = await this.swapService.getQuote(
+      tokenAMintAddress,
+      tokenBMintAddress,
+      tokenAAmount
+    );
+    
+    return {
+      tokenAMintAddress,
+      tokenBMintAddress,
+      inputAmount: tokenAAmount,
+      estimatedOutputAmount: estimatedAmount
+    };
+  }
+
+  @Post('deposit')
+  async depositLiquidity(
+    @Body() depositData: {
+      tokenAMintAddress: string;
+      tokenBMintAddress: string;
+      tokenAAmount: number;
+      tokenBAmount: number;
+    }
+  ) {
+    const { tokenAMintAddress, tokenBMintAddress, tokenAAmount, tokenBAmount } = depositData;
+    
+    return this.liquidityPoolService.depositLiquidity(
+      tokenAMintAddress,
+      tokenBMintAddress,
+      tokenAAmount,
+      tokenBAmount
+    );
+  }
+
+  @Post('swap')
+  async swapTokens(
+    @Body() swapData: {
+      tokenInMintAddress: string;
+      tokenOutMintAddress: string;
+      tokenInAmount: number;
+      userTokenOutAccount: string;
+    }
+  ) {
+    const { tokenInMintAddress, tokenOutMintAddress, tokenInAmount, userTokenOutAccount } = swapData;
+    
+    return this.swapService.swapTokens(
+      tokenInMintAddress,
+      tokenOutMintAddress,
+      tokenInAmount,
+      userTokenOutAccount
+    );
   }
 }
