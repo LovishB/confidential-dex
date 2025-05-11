@@ -10,14 +10,14 @@ export class SwapService {
    * @param tokenInMintAddress The mint address of the input token
    * @param tokenOutMintAddress The mint address of the output token
    * @param tokenAtokenInAmountAmount The amount of tokenIn to swap
-   * @param userTokenOutAccount The user's account address for tokenOut
+   * @param userWalletPubKey The user's account address for tokenOut
    * @returns An object containing swap execution details
    */
   async swapTokens(
     tokenInMintAddress: string,
     tokenOutMintAddress: string,
     tokenInAmount: number,
-    userTokenOutAccount: string
+    userWalletPubKey: string
   ) {
     try {
       // Implement token swap logic here
@@ -25,7 +25,7 @@ export class SwapService {
         tokenInMintAddress,
         tokenOutMintAddress,
         tokenInAmount,
-        userTokenOutAccount
+        userWalletPubKey
       });
         
       // Calculate tokens to receive based on AMM formula
@@ -41,7 +41,7 @@ export class SwapService {
         tokenOutMintAddress,
         tokenInAmount,
         estimatedTokenOutAmount,
-        userTokenOutAccount
+        userWalletPubKey
       );
       
       return {
@@ -50,7 +50,7 @@ export class SwapService {
         tokenOutMintAddress,
         inputAmount: tokenInAmount,
         outputAmount: estimatedTokenOutAmount,
-        userTokenOutAccount,
+        userWalletPubKey,
         inputSignature: swapResult.inputSignature,
         outputSignature: swapResult.outputSignature
       };
@@ -81,17 +81,19 @@ export class SwapService {
       // 1. Get the current reserves from the liquidity pool
       // 2. Apply the appropriate AMM formula (e.g., constant product formula x*y=k)
       // 3. Calculate the expected output amount including fees
-      
-      console.log('Getting quote for swap:', {
-        tokenInMintAddress,
-        tokenOutMintAddress,
-        tokenInAmount
-      });
+    
       
       // Placeholder calculation (replace with actual AMM formula)
       // Example with 0.3% fee like Uniswap
       const fee = 0.003;
       const inputWithFee = tokenInAmount * (1 - fee);
+
+      console.log('Getting quote for swap:', {
+        tokenInMintAddress,
+        tokenOutMintAddress,
+        tokenInAmount,
+        tokenOutAmount: inputWithFee * 0.9 // Placeholder for output amount
+      });
       
       // Placeholder for actual calculation
       return inputWithFee * 0.9;

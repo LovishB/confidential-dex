@@ -63,16 +63,16 @@ export class AppController {
       tokenInMintAddress: string;
       tokenOutMintAddress: string;
       tokenInAmount: number;
-      userTokenOutAccount: string;
+      userWalletPubKey: string;
     }
   ) {
-    const { tokenInMintAddress, tokenOutMintAddress, tokenInAmount, userTokenOutAccount } = swapData;
+    const { tokenInMintAddress, tokenOutMintAddress, tokenInAmount, userWalletPubKey } = swapData;
     
     return this.swapService.swapTokens(
       tokenInMintAddress,
       tokenOutMintAddress,
       tokenInAmount,
-      userTokenOutAccount
+      userWalletPubKey
     );
   }
 }
