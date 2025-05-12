@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { WalletService } from '../../services/wallet.service';
 import { Subscription } from 'rxjs';
 
@@ -11,6 +11,8 @@ export class PoolsComponent implements OnInit, OnDestroy {
   showAddLiquidity = false;
   isWalletConnected = false;
   private walletSubscription: Subscription = new Subscription();
+  selectedTokenOneImage = 'assets/images/csol.png';
+  selectedTokenTwoImage = 'assets/images/csol.png';
   
   // Mock data for pools (replace with actual data source)
   pools = [
@@ -20,7 +22,7 @@ export class PoolsComponent implements OnInit, OnDestroy {
     // Add more pool data as needed
   ];
 
-  constructor(private walletService: WalletService) {}
+  constructor(private walletService: WalletService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.walletSubscription = this.walletService.walletConnected$.subscribe(
@@ -38,6 +40,32 @@ export class PoolsComponent implements OnInit, OnDestroy {
 
   async connectWallet() {
     await this.walletService.connectWallet();
+  }
+
+  updateTokenOneImage(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+    const newImage = selectedOption.getAttribute('data-image');
+
+    if (newImage) {
+      this.selectedTokenOneImage = newImage;
+      this.cdr.detectChanges(); // Manually trigger change detection
+    } else {
+      console.error('No data-image attribute found for the selected option.');
+    }
+  }
+
+  updateTokenTwoImage(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+    const newImage = selectedOption.getAttribute('data-image');
+
+    if (newImage) {
+      this.selectedTokenTwoImage = newImage;
+      this.cdr.detectChanges(); // Manually trigger change detection
+    } else {
+      console.error('No data-image attribute found for the selected option.');
+    }
   }
 
   toggleAddLiquidity() {

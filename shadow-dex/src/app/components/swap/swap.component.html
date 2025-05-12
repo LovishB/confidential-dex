@@ -7,12 +7,13 @@
         <input type="number" id="from-amount" placeholder="0" [disabled]="!isWalletConnected">
       </div>
       <div class="token-select">
-        <img src="https://token-icons.s3.amazonaws.com/eth.png" alt="Ethereum Logo" class="token-icon">
-        <select id="from-token" [disabled]="!isWalletConnected">
-          <option value="ETH">ETH</option>
-          <option value="USDT">USDT</option>
-          <option value="USDC">USDC</option>
-          <option value="WBTC">WBTC</option>
+        <img [src]="selectedFromTokenImage" alt="Token Logo" class="token-icon">
+        <select id="from-token" [disabled]="!isWalletConnected" (change)="updateFromTokenImage($event)">
+          <option value="cSOL" data-image="assets/images/csol.png">cSOL</option>
+          <option value="cUSDT" data-image="assets/images/cusdt.png">cUSDT</option>
+          <option value="cUSDC" data-image="assets/images/cusdc.png">cUSDC</option>
+          <option value="cSALE" data-image="assets/images/csale.png">cSALE</option>
+          <option value="cMNTL" data-image="assets/images/cmntl.png">cMNTL</option>
         </select>
       </div>
     </div>
@@ -24,12 +25,13 @@
         <input type="number" id="to-amount" placeholder="0" readonly [disabled]="!isWalletConnected">
       </div>
       <div class="token-select">
-        <img src="https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694" alt="USDC Logo" class="token-icon">
-        <select id="to-token" [disabled]="!isWalletConnected">
-          <option value="USDT">USDT</option>
-          <option value="ETH">ETH</option>
-          <option value="USDC">USDC</option>
-          <option value="WBTC">WBTC</option>
+        <img [src]="selectedToTokenImage" alt="Token Logo" class="token-icon">
+        <select id="to-token" [disabled]="!isWalletConnected" (change)="updateToTokenImage($event)">
+          <option value="cSOL" data-image="assets/images/csol.png">cSOL</option>
+          <option value="cUSDT" data-image="assets/images/cusdt.png">cUSDT</option>
+          <option value="cUSDC" data-image="assets/images/cusdc.png">cUSDC</option>
+          <option value="cSALE" data-image="assets/images/csale.png">cSALE</option>
+          <option value="cMNTL" data-image="assets/images/cmntl.png">cMNTL</option>
         </select>
       </div>
     </div>
