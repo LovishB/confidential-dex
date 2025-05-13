@@ -1,1 +1,6 @@
-/* This file is intentionally left blank. */
+body {
+  font-family: sans-serif;
+  margin: 0;      // Remove default margin
+  padding: 0;     // Remove default padding (if any)
+  box-sizing: border-box;
+}

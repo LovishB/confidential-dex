@@ -89,4 +89,42 @@
       </tr>
     </tbody>
   </table>
+
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loading-modal">
+      <div class="spinner" *ngIf="!depositResult && !depositError"></div>
+      <ng-container *ngIf="!depositResult && !depositError">
+        <p>{{ loadingMessage }}</p>
+      </ng-container>
+      <ng-container *ngIf="depositResult">
+        <h3>Deposit Successful!</h3>
+        <p>
+          <b>Token A:</b> {{ depositResult.tokenAAmount }}<br>
+          <small>{{ depositResult.tokenAMintAddress }}</small>
+        </p>
+        <p>
+          <b>Token B:</b> {{ depositResult.tokenBAmount }}<br>
+          <small>{{ depositResult.tokenBMintAddress }}</small>
+        </p>
+        <p>
+          <b>Token A Signature:</b><br>
+          <a [href]="'https://explorer.solana.com/tx/' + depositResult.signatureA + '?cluster=devnet'" target="_blank">
+            {{ depositResult.signatureA }}
+          </a>
+        </p>
+        <p>
+          <b>Token B Signature:</b><br>
+          <a [href]="'https://explorer.solana.com/tx/' + depositResult.signatureB + '?cluster=devnet'" target="_blank">
+            {{ depositResult.signatureB }}
+          </a>
+        </p>
+        <button (click)="closeDepositResult()">Close</button>
+      </ng-container>
+      <ng-container *ngIf="depositError">
+        <h3>Deposit Failed</h3>
+        <p>{{ depositError }}</p>
+        <button (click)="closeDepositResult()">Close</button>
+      </ng-container>
+    </div>
+  </div>
 </div>

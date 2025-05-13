@@ -12,6 +12,24 @@ export class SwapComponent implements OnInit, OnDestroy {
   private walletSubscription: Subscription = new Subscription();
   selectedFromTokenImage = 'assets/images/csol.png';
   selectedToTokenImage = 'assets/images/csol.png';
+  loading = false;
+  loadingMessage = '';
+  loadingMessages = [
+    "Securing your confidential swap...hold tight.",
+    "Processing your private exchange",
+    "Encrypting transactions. This may take a moment.",
+    "Your confidential assets are being exchanged securely",
+    "Hang on! We’re ensuring your swap is private."
+  ];
+  private loadingMsgIndex = 0;
+  private loadingMsgInterval: any = null;
+  swapResult: any = null;
+  swapError: string | null = null;
+
+  fromAmount: string = '0';
+  fromToken: string = '';
+  toAmount: string = '0';
+  toToken: string = '';
 
   constructor(private walletService: WalletService, private cdr: ChangeDetectorRef) {}
 
@@ -69,11 +87,93 @@ export class SwapComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Simulate swap calculation (in real app, this would call smart contract)
-    const mockRate = 1800; // Example rate
-    const toAmount = +fromAmount * mockRate;
-    (document.getElementById('to-amount') as HTMLInputElement).value = toAmount.toFixed(2);
+    // Set these so the loading popup shows the correct token names
+    this.fromToken = fromToken;
+    this.toToken = toToken;
 
-    alert(`Swapping ${fromAmount} ${fromToken} for ${toAmount.toFixed(2)} ${toToken}`);
+    // Token symbol to address mapping
+    const tokenAddresses: { [key: string]: string } = {
+      cUSDC: 'BgD198WqG42r6FHGFKSA3QPnB7NbSYQB74xGhjHLzUKy',
+      cUSDT: '6i5mx6oPf5bJwSuLtZ7p35K4GxJbYzaiFniYTgpBiSmw',
+      cSOL: 'DEsvgQDbd4B8rx5YEZ5MJQx4uaum3D81GcoYrvbTCF5U',
+      cSALE: 'GJChkYoTLcrh2NEeLenZ9JjFzbBwgyjXq1TWdrbUSxZf',
+      cMNTL: 'A2ameLz6b3F5MjiQSF4HLEnjHZGZ4jCpkm9B81wSV3to'
+    };
+
+    // Prepare request body
+    const body = {
+      tokenInMintAddress: tokenAddresses[fromToken],   // from-token is tokenIn
+      tokenOutMintAddress: tokenAddresses[toToken], // to-token is tokenOut
+      tokenInAmount: +fromAmount,
+      userWalletPubKey: this.walletService.getPublicKey()
+    };
+
+    // Start loading popup
+    this.loading = true;
+    this.loadingMsgIndex = 0;
+    this.loadingMessage = this.loadingMessages[this.loadingMsgIndex];
+    this.loadingMsgInterval = setInterval(() => {
+      this.loadingMsgIndex = (this.loadingMsgIndex + 1) % this.loadingMessages.length;
+      this.loadingMessage = this.loadingMessages[this.loadingMsgIndex];
+      this.cdr.detectChanges();
+    }, 3000);
+
+    fetch('http://localhost:8888/swap', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+      .then(res => res.json())
+      .then(data => {
+        this.stopLoading(false); // Don't hide loading, show result
+        this.swapResult = {
+          tokenInAmount: data.inputAmount,
+          tokenOutAmount: data.outputAmount,
+          tokenInMintAddress: fromToken,
+          tokenOutMintAddress: toToken,
+          signature1: data.inputSignature,
+          signature2: data.outputSignature
+        };
+        this.cdr.detectChanges();
+      })
+      .catch(err => {
+        this.stopLoading();
+        this.swapError = 'Swap failed: ' + err.message;
+        this.cdr.detectChanges();
+      });
+  }
+
+  stopLoading(hide: boolean = true) {
+    if (this.loadingMsgInterval) {
+      clearInterval(this.loadingMsgInterval);
+      this.loadingMsgInterval = null;
+    }
+    if (hide) {
+      this.loading = false;
+    }
+    this.cdr.detectChanges();
+  }
+
+  closeResult() {
+    this.loading = false;
+    this.swapResult = null;
+    this.swapError = null;
+    this.cdr.detectChanges();
+  }
+
+  // Call this on input/select change
+  onFromAmountChange(event: any) {
+    this.fromAmount = event.target.value;
+  }
+  onFromTokenChange(event: any) {
+    this.fromToken = event.target.value;
+    this.updateFromTokenImage(event);
+  }
+  onToAmountChange(event: any) {
+    this.toAmount = event.target.value;
+  }
+  onToTokenChange(event: any) {
+    this.toToken = event.target.value;
+    this.updateToTokenImage(event);
   }
 }

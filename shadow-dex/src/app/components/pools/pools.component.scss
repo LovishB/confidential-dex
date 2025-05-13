@@ -71,8 +71,8 @@
 }
 
 .liquidity-token-select {
-  flex: 0.4;
-  box-shadow: 0 4px 8px rgba(128, 128, 128, 0.3);
+  flex: 0.45;
+  box-shadow: 0 4px 8px rgba(202, 202, 202, 0.3);
   border-radius: 12px;
   padding: 2px;
   position: relative;
@@ -90,8 +90,8 @@
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   pointer-events: none;
 }
 
@@ -102,7 +102,7 @@ select {
   padding: 6px;
   border-radius: 36px;
   width: 100%;
-  font-size: 16px;
+  font-size: 20px;
   height: 40px;
 }
 
@@ -260,4 +260,37 @@ h3 {
 
 .add-liquidity-button.connect-button {
   background-color: #9945FF; /* Purple Solana-themed color */
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-modal {
+  background: #222;
+  color: #fff;
+  padding: 2rem 3rem;
+  border-radius: 10px;
+  text-align: center;
+  min-width: 300px;
+}
+
+.spinner {
+  margin: 0 auto 1rem auto;
+  border: 6px solid #eee;
+  border-top: 6px solid #b514ed;
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
 }

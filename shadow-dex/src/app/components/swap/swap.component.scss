@@ -55,9 +55,8 @@ h2 {
 
 .token-select {
   flex: 0.3;
-  box-shadow: 0 4px 8px rgba(128, 128, 128, 0.3);
+  box-shadow: 0 4px 8px rgba(190, 190, 190, 0.3);
   border-radius: 36px;
-  padding: 2px;
   position: relative;
 }
 
@@ -66,6 +65,8 @@ h2 {
   box-shadow: none;
   padding-left: 35px;
   border-radius: 28px;
+  font-size: 18px;    // increased font size
+  height: 48px;       // increased height
 }
 
 .token-icon {
@@ -73,8 +74,8 @@ h2 {
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
   pointer-events: none;
 }
 
@@ -87,6 +88,7 @@ select {
   width: 100%;
   font-size: 16px;
   height: 40px;
+  margin-left: 4px;
 }
 
 input {
@@ -131,4 +133,190 @@ p {
 
 .connect-button {
   background-color: #9945FF; /* Purple Solana-themed color */
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #18181a; // darker grey for more contrast
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-modal {
+  background: #232326;
+  color: #fff;
+  padding: 2rem 3rem;
+  border-radius: 28px;
+  min-width: 420px;
+  min-height: 200px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 18px;
+  position: relative;
+}
+
+.modal-header-spacer {
+  flex: 1;
+}
+
+.loading-modal-header {
+  flex: 2;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #9945FF;
+  letter-spacing: 0.01em;
+  margin: 0;
+  padding-left: 0;
+}
+
+.close-x {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  padding: 0;
+  line-height: 1;
+  transition: opacity 0.2s;
+  margin-left: 0;
+}
+.close-x:hover svg line {
+  stroke: #fff;
+}
+
+.loading-flex {
+  display: flex;
+  flex-direction: column; // changed from row to column
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  position: relative;
+}
+
+.loading-token {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 90px;
+  gap: 10px;
+}
+
+.loading-token-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #18181a;
+  border: 2px solid #444;
+  margin-bottom: 6px;
+}
+
+.loading-token-amt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loading-amt {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.loading-symbol {
+  font-size: 1rem;
+  color: #b0b0b0;
+  margin-top: 2px;
+}
+
+.spinner {
+  margin: 0 24px;
+  border: 6px solid #eee;
+  border-top: 6px solid #9945FF;
+  border-radius: 50%;
+  width: 48px; height: 48px;
+  animation: spin 1s linear infinite;
+}
+
+.loading-message {
+  position: absolute;
+  bottom: 18px;
+  left: 0; right: 0;
+  width: 100%;
+  font-size: 1rem;
+  color: #b0b0b0;
+  text-align: center;
+  margin: 0;
+  padding: 0 10px;
+}
+
+.loading-tokens-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  width: 100%;
+  margin-bottom: 36px; // increased for more gap
+}
+
+.loading-label {
+  font-size: 0.95rem;
+  color: #9945FF;
+  margin-top: 4px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  margin-bottom: 24px;
+}
+
+.signature-row {
+  margin-bottom: 12px;
+}
+.signature-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  padding: 10px 14px;
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.sig-label {
+  color: #fff;
+  font-weight: 600;
+  margin-right: 10px;
+  min-width: 110px;
+}
+.sig-value {
+  color: #b0b0b0;
+  font-family: monospace;
+  font-size: 13px;
+  overflow-x: auto;
+  max-width: 170px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
 }

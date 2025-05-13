@@ -10,7 +10,6 @@ import { Component } from '@angular/core';
           <a [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
           <a [routerLink]="['/swap']" routerLinkActive="active">Swap</a>
           <a [routerLink]="['/pools']" routerLinkActive="active">Pools</a>
-          <a [routerLink]="['/activate-confidential']" routerLinkActive="active">Activate Token</a>
         </nav>
       </div>
       <div class="content">
@@ -46,8 +45,8 @@ import { Component } from '@angular/core';
       border: none;
       color: #b514ed;
       cursor: pointer;
-      font-size: 16px;
-      padding: 8px 16px;
+      font-size: 20px;
+      padding: 12px 16px;
       border-radius: 8px;
       transition: all 0.3s;
       font-weight: normal;

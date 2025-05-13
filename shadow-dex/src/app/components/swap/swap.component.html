@@ -4,11 +4,12 @@
     <div class="swap-label">Sell</div>
     <div class="input-row">
       <div class="amount-input">
-        <input type="number" id="from-amount" placeholder="0" [disabled]="!isWalletConnected">
+        <input type="number" id="from-amount" placeholder="0" [disabled]="!isWalletConnected"
+          [value]="fromAmount" (input)="onFromAmountChange($event)">
       </div>
       <div class="token-select">
         <img [src]="selectedFromTokenImage" alt="Token Logo" class="token-icon">
-        <select id="from-token" [disabled]="!isWalletConnected" (change)="updateFromTokenImage($event)">
+        <select id="from-token" [disabled]="!isWalletConnected" (change)="onFromTokenChange($event)">
           <option value="cSOL" data-image="assets/images/csol.png">cSOL</option>
           <option value="cUSDT" data-image="assets/images/cusdt.png">cUSDT</option>
           <option value="cUSDC" data-image="assets/images/cusdc.png">cUSDC</option>
@@ -22,11 +23,12 @@
     <div class="swap-label">Buy</div>
     <div class="input-row">
       <div class="amount-input">
-        <input type="number" id="to-amount" placeholder="0" readonly [disabled]="!isWalletConnected">
+        <input type="number" id="to-amount" placeholder="0" readonly [disabled]="!isWalletConnected"
+          [value]="toAmount">
       </div>
       <div class="token-select">
         <img [src]="selectedToTokenImage" alt="Token Logo" class="token-icon">
-        <select id="to-token" [disabled]="!isWalletConnected" (change)="updateToTokenImage($event)">
+        <select id="to-token" [disabled]="!isWalletConnected" (change)="onToTokenChange($event)">
           <option value="cSOL" data-image="assets/images/csol.png">cSOL</option>
           <option value="cUSDT" data-image="assets/images/cusdt.png">cUSDT</option>
           <option value="cUSDC" data-image="assets/images/cusdc.png">cUSDC</option>
@@ -39,4 +41,78 @@
   <button class="swap-button" *ngIf="isWalletConnected" (click)="handleSwap()">Swap</button>
   <button class="swap-button connect-button" *ngIf="!isWalletConnected" (click)="connectWallet()">Connect Wallet</button>
   <p>Swap is powered by Token-2022 Confidential Balances. Transaction amounts are encrypted using zk-proofs, while maintaining on-chain verifiability</p>
+</div>
+<div *ngIf="loading" class="loading-overlay">
+  <div class="loading-modal loading-flex">
+    <div class="modal-header-row">
+      <div class="modal-header-spacer"></div>
+      <div class="loading-modal-header">
+        {{ swapResult ? 'Swap Successful!' : 'Executing Confidential Swap' }}
+      </div>
+      <button class="close-x" (click)="closeResult()" aria-label="Close">
+        <svg width="26" height="26" viewBox="0 0 20 20">
+          <line x1="5" y1="5" x2="15" y2="15" stroke="#9945FF" stroke-width="2" stroke-linecap="round"/>
+          <line x1="15" y1="5" x2="5" y2="15" stroke="#9945FF" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <!-- Show loading-tokens-row for both loading and swapResult -->
+    <div class="loading-tokens-row">
+      <div class="loading-token loading-token-in">
+        <img [src]="selectedFromTokenImage" alt="Token In" class="loading-token-icon">
+        <div class="loading-token-amt">
+          <span class="loading-amt">
+            {{ swapResult ? swapResult.tokenInAmount : (fromAmount || '0') }}
+          </span>
+          <span class="loading-symbol">
+            {{ swapResult ? swapResult.tokenInMintAddress : (fromToken || '') }}
+          </span>
+        </div>
+      </div>
+      <div class="spinner" *ngIf="!swapResult && !swapError"></div>
+      <div class="loading-token loading-token-out">
+        <img [src]="selectedToTokenImage" alt="Token Out" class="loading-token-icon">
+        <div class="loading-token-amt">
+          <span class="loading-amt">
+            {{ swapResult ? swapResult.tokenOutAmount : (toAmount || '0') }}
+          </span>
+          <span class="loading-symbol">
+            {{ swapResult ? swapResult.tokenOutMintAddress : (toToken || '') }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <!-- Loading message or swap result details -->
+    <ng-container *ngIf="!swapResult && !swapError">
+      <p class="loading-message">{{ loadingMessage }}</p>
+    </ng-container>
+    <ng-container *ngIf="swapResult">
+      <div class="signature-row">
+        <button class="swap-button signature-btn" (click)="window.open('https://explorer.solana.com/tx/' + swapResult.signature1 + '?cluster=devnet', '_blank')">
+          <span class="sig-label">Sell Signature</span>
+          <span class="sig-value">{{ swapResult.signature1 }}</span>
+          <span class="sig-arrow" aria-hidden="true" style="margin-left:8px;">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+              <path d="M7 5l5 5-5 5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </button>
+      </div>
+      <div class="signature-row">
+        <button class="swap-button signature-btn" (click)="window.open('https://explorer.solana.com/tx/' + swapResult.signature2 + '?cluster=devnet', '_blank')">
+          <span class="sig-label">Buy Signature</span>
+          <span class="sig-value">{{ swapResult.signature2 }}</span>
+          <span class="sig-arrow" aria-hidden="true" style="margin-left:8px;">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+              <path d="M7 5l5 5-5 5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="swapError">
+      <h3>Swap Failed</h3>
+      <p>{{ swapError }}</p>
+    </ng-container>
+  </div>
 </div>

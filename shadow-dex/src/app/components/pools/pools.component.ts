@@ -13,6 +13,19 @@ export class PoolsComponent implements OnInit, OnDestroy {
   private walletSubscription: Subscription = new Subscription();
   selectedTokenOneImage = 'assets/images/csol.png';
   selectedTokenTwoImage = 'assets/images/csol.png';
+  loading = false;
+  loadingMessage = '';
+  loadingMessages = [
+    "Encrypting your deposit for confidential liquidity-please wait…",
+    "Securing your tokens in the confidential pool. Your amounts remain private.",
+    "Processing your confidential deposit using zero-knowledge proofs…",
+    "Win Rewards in a confidentiality way",
+    "Applying cryptographic protection to your liquidity-almost done!"
+  ];
+  private loadingMsgIndex = 0;
+  private loadingMsgInterval: any = null;
+  depositResult: any = null;
+  depositError: string | null = null;
   
   // Mock data for pools (replace with actual data source)
   pools = [
@@ -87,6 +100,78 @@ export class PoolsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    alert(`Depositing ${amount1} ${token1} and ${amount2} ${token2} to pool`);
+    // Token symbol to address mapping
+    const tokenAddresses: { [key: string]: string } = {
+      cUSDC: 'BgD198WqG42r6FHGFKSA3QPnB7NbSYQB74xGhjHLzUKy',
+      cUSDT: '6i5mx6oPf5bJwSuLtZ7p35K4GxJbYzaiFniYTgpBiSmw',
+      cSOL: 'DEsvgQDbd4B8rx5YEZ5MJQx4uaum3D81GcoYrvbTCF5U',
+      cSALE: 'GJChkYoTLcrh2NEeLenZ9JjFzbBwgyjXq1TWdrbUSxZf',
+      cMNTL: 'A2ameLz6b3F5MjiQSF4HLEnjHZGZ4jCpkm9B81wSV3to'
+    };
+
+    const body = {
+      tokenAMintAddress: tokenAddresses[token1],
+      tokenBMintAddress: tokenAddresses[token2],
+      tokenAAmount: +amount1,
+      tokenBAmount: +amount2
+    };
+
+    // Start loading popup
+    this.loading = true;
+    this.loadingMsgIndex = 0;
+    this.loadingMessage = this.loadingMessages[this.loadingMsgIndex];
+    this.depositResult = null;
+    this.depositError = null;
+    this.loadingMsgInterval = setInterval(() => {
+      this.loadingMsgIndex = (this.loadingMsgIndex + 1) % this.loadingMessages.length;
+      this.loadingMessage = this.loadingMessages[this.loadingMsgIndex];
+      this.cdr.detectChanges();
+    }, 3000);
+
+    fetch('http://localhost:8888/deposit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+      .then(res => res.json())
+      .then(data => {
+        this.stopLoading(false); // Don't hide loading, show result
+        if (data.success && data.data) {
+          this.depositResult = {
+            tokenAAmount: data.data.tokenAAmount,
+            tokenBAmount: data.data.tokenBAmount,
+            tokenAMintAddress: data.data.tokenAMintAddress,
+            tokenBMintAddress: data.data.tokenBMintAddress,
+            signatureA: data.data.signatureTokenATransfer,
+            signatureB: data.data.signatureTokenBTransfer
+          };
+        } else {
+          this.depositError = data.message || 'Deposit failed';
+        }
+        this.cdr.detectChanges();
+      })
+      .catch(err => {
+        this.stopLoading();
+        this.depositError = 'Deposit failed: ' + err.message;
+        this.cdr.detectChanges();
+      });
+  }
+
+  stopLoading(hide: boolean = true) {
+    if (this.loadingMsgInterval) {
+      clearInterval(this.loadingMsgInterval);
+      this.loadingMsgInterval = null;
+    }
+    if (hide) {
+      this.loading = false;
+    }
+    this.cdr.detectChanges();
+  }
+
+  closeDepositResult() {
+    this.loading = false;
+    this.depositResult = null;
+    this.depositError = null;
+    this.cdr.detectChanges();
   }
 }
