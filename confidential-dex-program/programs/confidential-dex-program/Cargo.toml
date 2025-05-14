@@ -1,0 +1,26 @@
+[package]
+name = "confidential-dex-program"
+version = "0.1.0"
+description = "Created with Anchor"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "confidential_dex_program"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build"]
+
+[provider]
+cluster = "https://api.devnet.solana.com"
+wallet = "/Users/lovishbadlani/.config/solana/alm.json"
+
+
+[dependencies]
+anchor-lang = "0.31.1"
+
