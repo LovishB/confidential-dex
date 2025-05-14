@@ -14,6 +14,11 @@ export class AppController {
     return "SERVER IS UP AND RUNNING";
   }
 
+  @Get('pools')
+  getPools() {
+    return { pools: this.liquidityPoolService.getPools() };
+  }
+
   @Post('quote')
   async getQuote(
     @Body() quoteData: {

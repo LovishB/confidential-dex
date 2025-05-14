@@ -14,7 +14,7 @@
           <option value="cUSDT" data-image="assets/images/cusdt.png">cUSDT</option>
           <option value="cUSDC" data-image="assets/images/cusdc.png">cUSDC</option>
           <option value="cSALE" data-image="assets/images/csale.png">cSALE</option>
-          <option value="cMNTL" data-image="assets/images/cmntl.png">cMNTL</option>
+          <option value="cMNTL" data-image="assets/images/cmntl.jpg">cMNTL</option>
         </select>
       </div>
     </div>
@@ -33,7 +33,7 @@
           <option value="cUSDT" data-image="assets/images/cusdt.png">cUSDT</option>
           <option value="cUSDC" data-image="assets/images/cusdc.png">cUSDC</option>
           <option value="cSALE" data-image="assets/images/csale.png">cSALE</option>
-          <option value="cMNTL" data-image="assets/images/cmntl.png">cMNTL</option>
+          <option value="cMNTL" data-image="assets/images/cmntl.jpg">cMNTL</option>
         </select>
       </div>
     </div>
@@ -88,7 +88,10 @@
     </ng-container>
     <ng-container *ngIf="swapResult">
       <div class="signature-row">
-        <button class="swap-button signature-btn" (click)="window.open('https://explorer.solana.com/tx/' + swapResult.signature1 + '?cluster=devnet', '_blank')">
+        <button
+          class="swap-button signature-btn"
+          (click)="openInNewTab('https://explorer.solana.com/tx/' + swapResult.signature1 + '?cluster=devnet')"
+        >
           <span class="sig-label">Sell Signature</span>
           <span class="sig-value">{{ swapResult.signature1 }}</span>
           <span class="sig-arrow" aria-hidden="true" style="margin-left:8px;">
@@ -99,7 +102,10 @@
         </button>
       </div>
       <div class="signature-row">
-        <button class="swap-button signature-btn" (click)="window.open('https://explorer.solana.com/tx/' + swapResult.signature2 + '?cluster=devnet', '_blank')">
+        <button
+          class="swap-button signature-btn"
+          (click)="openInNewTab('https://explorer.solana.com/tx/' + swapResult.signature2 + '?cluster=devnet')"
+        >
           <span class="sig-label">Buy Signature</span>
           <span class="sig-value">{{ swapResult.signature2 }}</span>
           <span class="sig-arrow" aria-hidden="true" style="margin-left:8px;">

@@ -26,13 +26,14 @@ export class PoolsComponent implements OnInit, OnDestroy {
   private loadingMsgInterval: any = null;
   depositResult: any = null;
   depositError: string | null = null;
+  selectedTokenOne = 'cSOL';
+  selectedTokenTwo = 'cSOL';
   
-  // Mock data for pools (replace with actual data source)
+  // Default/mock data for pools (used as backup)
   pools = [
     { pair: 'ETH/USDC', tvl: '$12.5M', reward: '0.3%' },
     { pair: 'WBTC/USDT', tvl: '$8.2M', reward: '0.25%' },
     { pair: 'SOL/USDC', tvl: '$5.7M', reward: '0.35%' }
-    // Add more pool data as needed
   ];
 
   constructor(private walletService: WalletService, private cdr: ChangeDetectorRef) {}
@@ -43,6 +44,21 @@ export class PoolsComponent implements OnInit, OnDestroy {
         this.isWalletConnected = connected;
       }
     );
+
+    // Try to fetch pools from backend, fallback to mock data if fails
+    fetch('http://localhost:8888/pools')
+      .then(res => res.json())
+      .then(data => {
+        if (data && Array.isArray(data.pools) && data.pools.length > 0) {
+          this.pools = data.pools;
+        }
+        this.cdr.detectChanges();
+      })
+      .catch(err => {
+        // If fetch fails, keep the default/mock pools
+        console.error('Failed to fetch pools, using backup data:', err);
+        this.cdr.detectChanges();
+      });
   }
 
   ngOnDestroy() {
@@ -59,10 +75,11 @@ export class PoolsComponent implements OnInit, OnDestroy {
     const selectElement = event.target as HTMLSelectElement;
     const selectedOption = selectElement.options[selectElement.selectedIndex];
     const newImage = selectedOption.getAttribute('data-image');
+    this.selectedTokenOne = selectElement.value;
 
     if (newImage) {
       this.selectedTokenOneImage = newImage;
-      this.cdr.detectChanges(); // Manually trigger change detection
+      this.cdr.detectChanges();
     } else {
       console.error('No data-image attribute found for the selected option.');
     }
@@ -72,10 +89,11 @@ export class PoolsComponent implements OnInit, OnDestroy {
     const selectElement = event.target as HTMLSelectElement;
     const selectedOption = selectElement.options[selectElement.selectedIndex];
     const newImage = selectedOption.getAttribute('data-image');
+    this.selectedTokenTwo = selectElement.value;
 
     if (newImage) {
       this.selectedTokenTwoImage = newImage;
-      this.cdr.detectChanges(); // Manually trigger change detection
+      this.cdr.detectChanges();
     } else {
       console.error('No data-image attribute found for the selected option.');
     }
@@ -168,10 +186,14 @@ export class PoolsComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  closeDepositResult() {
+  closeResult() {
     this.loading = false;
     this.depositResult = null;
     this.depositError = null;
     this.cdr.detectChanges();
+  }
+
+  openInNewTab(url: string) {
+    window.open(url, '_blank');
   }
 }

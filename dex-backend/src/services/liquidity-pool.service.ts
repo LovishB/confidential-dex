@@ -55,4 +55,16 @@ export class LiquidityPoolService {
       );
     }
   }
+
+  /**
+   * Get all available pools
+   */
+  getPools() {
+    return [
+      { pair: 'ETH/USDC', tvl: '$10.5M', reward: '0.3%' },
+      { pair: 'WBTC/USDT', tvl: '$10.2M', reward: '0.25%' },
+      { pair: 'SOL/USDC', tvl: '$10.7M', reward: '0.35%' }
+      // Add more pool data as needed
+    ];
+  }
 }

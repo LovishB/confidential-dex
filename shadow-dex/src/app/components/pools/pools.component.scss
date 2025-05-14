@@ -265,7 +265,7 @@ h3 {
 .loading-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: #18181a; // darker grey for more contrast
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -273,12 +273,16 @@ h3 {
 }
 
 .loading-modal {
-  background: #222;
+  background: #232326;
   color: #fff;
   padding: 2rem 3rem;
-  border-radius: 10px;
+  border-radius: 28px;
+  min-width: 420px;
+  min-height: 200px;
   text-align: center;
-  min-width: 300px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+  position: relative;
+  overflow: hidden;
 }
 
 .spinner {
@@ -293,4 +297,137 @@ h3 {
 @keyframes spin {
   0% { transform: rotate(0deg);}
   100% { transform: rotate(360deg);}
+}
+
+.loading-flex {
+  display: flex;
+  flex-direction: column; // changed from row to column
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  position: relative;
+}
+
+.modal-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 18px;
+  position: relative;
+}
+
+.modal-header-spacer {
+  flex: 1;
+}
+
+.loading-modal-header {
+  flex: 2;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #9945FF;
+  letter-spacing: 0.01em;
+  margin: 0;
+  padding-left: 0;
+}
+
+.close-x {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  padding: 0;
+  line-height: 1;
+  transition: opacity 0.2s;
+  margin-left: 0;
+}
+.close-x:hover svg line {
+  stroke: #fff;
+}
+
+.deposit-result-row {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.deposit-result-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 180px;
+}
+
+.deposit-token-img {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+.deposit-token-symbol {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.deposit-token-amount {
+  font-size: 18px;
+  margin-bottom: 16px; // Increased gap between amount and signature
+}
+
+.deposit-token-mint {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 6px;
+  word-break: break-all;
+  text-align: center;
+}
+
+.deposit-token-signature {
+  font-size: 13px;
+  word-break: break-all;
+  text-align: center;
+}
+
+.deposit-signature-btn {
+  margin-top: 4px;
+  background: #9945FF;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.deposit-signature-btn:hover {
+  background: #b514ed;
+}
+
+.deposit-loading-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 16px;
+}
+
+.deposit-loading-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.deposit-loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
 }

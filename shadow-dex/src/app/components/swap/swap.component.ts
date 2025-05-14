@@ -27,9 +27,9 @@ export class SwapComponent implements OnInit, OnDestroy {
   swapError: string | null = null;
 
   fromAmount: string = '0';
-  fromToken: string = '';
+  fromToken: string = 'cSOL'; // <-- set default to match your select default
   toAmount: string = '0';
-  toToken: string = '';
+  toToken: string = 'cSOL';   // <-- set default to match your select default
 
   constructor(private walletService: WalletService, private cdr: ChangeDetectorRef) {}
 
@@ -161,13 +161,54 @@ export class SwapComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
+  fetchQuote() {
+    // Only fetch if all required fields are set and fromAmount is a valid positive number
+    const amount = Number(this.fromAmount);
+    if (!this.fromAmount || isNaN(amount) || amount <= 0 || !this.fromToken || !this.toToken) {
+      this.toAmount = '0';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    const tokenAddresses: { [key: string]: string } = {
+      cUSDC: 'BgD198WqG42r6FHGFKSA3QPnB7NbSYQB74xGhjHLzUKy',
+      cUSDT: '6i5mx6oPf5bJwSuLtZ7p35K4GxJbYzaiFniYTgpBiSmw',
+      cSOL: 'DEsvgQDbd4B8rx5YEZ5MJQx4uaum3D81GcoYrvbTCF5U',
+      cSALE: 'GJChkYoTLcrh2NEeLenZ9JjFzbBwgyjXq1TWdrbUSxZf',
+      cMNTL: 'A2ameLz6b3F5MjiQSF4HLEnjHZGZ4jCpkm9B81wSV3to'
+    };
+
+    const body = {
+      tokenAMintAddress: tokenAddresses[this.fromToken],
+      tokenBMintAddress: tokenAddresses[this.toToken],
+      tokenAAmount: amount
+    };
+
+    fetch('http://localhost:8888/quote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+      .then(res => res.json())
+      .then(data => {
+        this.toAmount = data.estimatedOutputAmount?.toString() || '0';
+        this.cdr.detectChanges();
+      })
+      .catch(() => {
+        this.toAmount = '0';
+        this.cdr.detectChanges();
+      });
+  }
+
   // Call this on input/select change
   onFromAmountChange(event: any) {
     this.fromAmount = event.target.value;
+    this.fetchQuote();
   }
   onFromTokenChange(event: any) {
     this.fromToken = event.target.value;
     this.updateFromTokenImage(event);
+    this.fetchQuote();
   }
   onToAmountChange(event: any) {
     this.toAmount = event.target.value;
@@ -175,5 +216,10 @@ export class SwapComponent implements OnInit, OnDestroy {
   onToTokenChange(event: any) {
     this.toToken = event.target.value;
     this.updateToTokenImage(event);
+    this.fetchQuote();
+  }
+
+  openInNewTab(url: string) {
+    window.open(url, '_blank');
   }
 }

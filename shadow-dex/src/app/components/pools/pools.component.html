@@ -20,7 +20,7 @@
                 <option value="cUSDT" data-image="assets/images/cusdt.png">cUSDT</option>
                 <option value="cUSDC" data-image="assets/images/cusdc.png">cUSDC</option>
                 <option value="cSALE" data-image="assets/images/csale.png">cSALE</option>
-                <option value="cMNTL" data-image="assets/images/cmntl.png">cMNTL</option>
+                <option value="cMNTL" data-image="assets/images/cmntl.jpg">cMNTL</option>
               </select>
             </div>
           </div>
@@ -38,7 +38,7 @@
                 <option value="cUSDT" data-image="assets/images/cusdt.png">cUSDT</option>
                 <option value="cUSDC" data-image="assets/images/cusdc.png">cUSDC</option>
                 <option value="cSALE" data-image="assets/images/csale.png">cSALE</option>
-                <option value="cMNTL" data-image="assets/images/cmntl.png">cMNTL</option>
+                <option value="cMNTL" data-image="assets/images/cmntl.jpg">cMNTL</option>
               </select>
             </div>
           </div>
@@ -91,39 +91,72 @@
   </table>
 
   <div *ngIf="loading" class="loading-overlay">
-    <div class="loading-modal">
-      <div class="spinner" *ngIf="!depositResult && !depositError"></div>
+    <div class="loading-modal loading-flex">
+      <div class="modal-header-row">
+      <div class="modal-header-spacer"></div>
+      <div class="loading-modal-header">
+        {{ depositResult ? 'Deposit Successful!' : 'Executing Confidential Deposit' }}
+      </div>
+        <button class="close-x" (click)="closeResult()" aria-label="Close">
+          <svg width="26" height="26" viewBox="0 0 20 20">
+            <line x1="5" y1="5" x2="15" y2="15" stroke="#9945FF" stroke-width="2" stroke-linecap="round"/>
+            <line x1="15" y1="5" x2="5" y2="15" stroke="#9945FF" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
       <ng-container *ngIf="!depositResult && !depositError">
-        <p>{{ loadingMessage }}</p>
+        <div class="deposit-loading-row">
+          <div class="deposit-loading-col">
+            <img [src]="selectedTokenOneImage" alt="{{ selectedTokenOne }}" class="deposit-token-img">
+            <div class="deposit-token-symbol">{{ selectedTokenOne }}</div>
+          </div>
+          <div class="deposit-loading-spinner">
+            <div class="spinner"></div>
+          </div>
+          <div class="deposit-loading-col">
+            <img [src]="selectedTokenTwoImage" alt="{{ selectedTokenTwo }}" class="deposit-token-img">
+            <div class="deposit-token-symbol">{{ selectedTokenTwo }}</div>
+          </div>
+        </div>
+        <p style="text-align:center;">{{ loadingMessage }}</p>
       </ng-container>
       <ng-container *ngIf="depositResult">
-        <h3>Deposit Successful!</h3>
-        <p>
-          <b>Token A:</b> {{ depositResult.tokenAAmount }}<br>
-          <small>{{ depositResult.tokenAMintAddress }}</small>
-        </p>
-        <p>
-          <b>Token B:</b> {{ depositResult.tokenBAmount }}<br>
-          <small>{{ depositResult.tokenBMintAddress }}</small>
-        </p>
-        <p>
-          <b>Token A Signature:</b><br>
-          <a [href]="'https://explorer.solana.com/tx/' + depositResult.signatureA + '?cluster=devnet'" target="_blank">
-            {{ depositResult.signatureA }}
-          </a>
-        </p>
-        <p>
-          <b>Token B Signature:</b><br>
-          <a [href]="'https://explorer.solana.com/tx/' + depositResult.signatureB + '?cluster=devnet'" target="_blank">
-            {{ depositResult.signatureB }}
-          </a>
-        </p>
-        <button (click)="closeDepositResult()">Close</button>
+        <div class="deposit-result-row">
+          <!-- Token A -->
+          <div class="deposit-result-col">
+            <img [src]="selectedTokenOneImage" alt="{{ selectedTokenOne }}" class="deposit-token-img">
+            <div class="deposit-token-symbol">{{ selectedTokenOne }}</div>
+            <div class="deposit-token-amount">{{ depositResult.tokenAAmount }}</div>
+            <div class="deposit-token-signature">
+              <button
+                class="deposit-signature-btn"
+                (click)="openInNewTab('https://explorer.solana.com/tx/' + depositResult.signatureA + '?cluster=devnet')"
+                type="button"
+              >
+                Deposit Signature
+              </button>
+            </div>
+          </div>
+          <!-- Token B -->
+          <div class="deposit-result-col">
+            <img [src]="selectedTokenTwoImage" alt="{{ selectedTokenTwo }}" class="deposit-token-img">
+            <div class="deposit-token-symbol">{{ selectedTokenTwo }}</div>
+            <div class="deposit-token-amount">{{ depositResult.tokenBAmount }}</div>
+            <div class="deposit-token-signature">
+              <button
+                class="deposit-signature-btn"
+                (click)="openInNewTab('https://explorer.solana.com/tx/' + depositResult.signatureB + '?cluster=devnet')"
+                type="button"
+              >
+                Deposit Signature
+              </button>
+            </div>
+          </div>
+        </div>
       </ng-container>
       <ng-container *ngIf="depositError">
         <h3>Deposit Failed</h3>
         <p>{{ depositError }}</p>
-        <button (click)="closeDepositResult()">Close</button>
       </ng-container>
     </div>
   </div>
