@@ -1,12 +1,14 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { LiquidityPoolService } from './services/liquidity-pool.service';
 import { SwapService } from './services/swap.service';
+import { Web3SolanaService } from './services/web3-solana.service';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly liquidityPoolService: LiquidityPoolService,
-    private readonly swapService: SwapService
+    private readonly swapService: SwapService,
+    private readonly web3SolanaService: Web3SolanaService
   ) {}
 
   @Get()
@@ -79,5 +81,52 @@ export class AppController {
       tokenInAmount,
       userWalletPubKey
     );
+  }
+
+  @Post('initialize-pool')
+  async initializePool(
+    @Body() body: {
+      tokenAMintAddress: string;
+      tokenBMintAddress: string;
+    }
+  ) {
+    const { tokenAMintAddress, tokenBMintAddress } = body;
+    return this.web3SolanaService.initializePool(tokenAMintAddress, tokenBMintAddress);
+  }
+
+  @Post('get-pool-size')
+  async getPoolSize(
+    @Body() body: {
+      tokenAMintAddress: string;
+      tokenBMintAddress: string;
+    }
+  ) {
+    const { tokenAMintAddress, tokenBMintAddress } = body;
+    return this.web3SolanaService.getPoolSize(tokenAMintAddress, tokenBMintAddress);
+  }
+
+  @Post('depositLiquidityToContract')
+  async depositLiquidityToContract(
+    @Body() body: {
+      tokenAMintAddress: string;
+      tokenBMintAddress: string;
+      tokenAAmount: number,
+      tokenBAmount: number
+    }
+  ) {
+    const { tokenAMintAddress, tokenBMintAddress, tokenAAmount, tokenBAmount } = body;
+    return this.web3SolanaService.depositLiquidity(tokenAMintAddress, tokenBMintAddress, tokenAAmount, tokenBAmount);
+  }
+
+  @Post('swapLiquidityToContract')
+  async swapLiquidityToContract(
+    @Body() body: {
+      tokenAMintAddress: string;
+      tokenBMintAddress: string;
+      tokenAAmount: number
+    }
+  ) {
+    const { tokenAMintAddress, tokenBMintAddress, tokenAAmount } = body;
+    return this.web3SolanaService.swap(tokenAMintAddress, tokenBMintAddress, tokenAAmount);
   }
 }

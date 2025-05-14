@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { LiquidityPoolService } from './services/liquidity-pool.service';
 import { SwapService } from './services/swap.service';
 import { ExecuteSolanaCliService } from './services/execute-solana-cli.service';
+import { Web3SolanaService } from './services/web3-solana.service';
 
 @Module({
   imports: [],
@@ -10,7 +11,8 @@ import { ExecuteSolanaCliService } from './services/execute-solana-cli.service';
   providers: [
     LiquidityPoolService,
     SwapService,
-    ExecuteSolanaCliService
+    ExecuteSolanaCliService,
+    Web3SolanaService
   ]
 })
 export class AppModule {}
