@@ -1,5 +1,8 @@
 .env
-shadow-dex/.angular
-shadow-dex/.env
-shadow-dex/.env.local
-shadow-dex/node_modules
+confix/.angular
+confix/.env
+confix/.env.local
+confix/node_modules
+confix/package-lock.json
+confix/dist
+.DS_Store

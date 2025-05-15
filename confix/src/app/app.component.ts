@@ -120,7 +120,7 @@ import { Component } from '@angular/core';
   `]
 })
 export class AppComponent {
-  title = 'shadow-dex';
+  title = 'confix';
   walletAddress = '26DbLxVUgQPmmwwFNpoWbeTuCT7jn8f19cFZeRtzNwyW';
 
   get shortAddress(): string {

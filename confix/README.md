@@ -1,6 +1,6 @@
-# ShadowDEX
+# ConfiX
 
-ShadowDEX is a decentralized exchange (DEX) application that allows users to swap tokens and provide liquidity in a confidential manner. The application leverages zero-knowledge proofs to ensure privacy while maintaining on-chain verifiability.
+ConfiX is a decentralized exchange (DEX) application that allows users to swap tokens and provide liquidity in a confidential manner. The application leverages zero-knowledge proofs to ensure privacy while maintaining on-chain verifiability.
 
 ## Features
 
@@ -11,7 +11,7 @@ ShadowDEX is a decentralized exchange (DEX) application that allows users to swa
 ## Project Structure
 
 ```
-shadow-dex
+confix
 ├── src
 │   ├── app
 │   │   ├── app.component.ts
@@ -51,7 +51,7 @@ shadow-dex
 
 ## Getting Started
 
-To get started with the ShadowDEX application, follow these steps:
+To get started with the ConfiX application, follow these steps:
 
 1. Clone the repository:
    ```
@@ -60,7 +60,7 @@ To get started with the ShadowDEX application, follow these steps:
 
 2. Navigate to the project directory:
    ```
-   cd shadow-dex
+   cd confix
    ```
 
 3. Install the dependencies:
