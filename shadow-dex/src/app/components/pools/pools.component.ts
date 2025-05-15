@@ -11,8 +11,8 @@ export class PoolsComponent implements OnInit, OnDestroy {
   showAddLiquidity = false;
   isWalletConnected = false;
   private walletSubscription: Subscription = new Subscription();
-  selectedTokenOneImage = 'assets/images/csol.png';
-  selectedTokenTwoImage = 'assets/images/csol.png';
+  selectedTokenOneImage = '';
+  selectedTokenTwoImage = '';
   loading = false;
   loadingMessage = '';
   loadingMessages = [
@@ -26,14 +26,19 @@ export class PoolsComponent implements OnInit, OnDestroy {
   private loadingMsgInterval: any = null;
   depositResult: any = null;
   depositError: string | null = null;
-  selectedTokenOne = 'cSOL';
-  selectedTokenTwo = 'cSOL';
+  selectedTokenOne = '';
+  selectedTokenTwo = '';
+  amount1: number | null = null;
+  amount2: number | null = null;
+  amount1Invalid = false;
+  amount2Invalid = false;
   
   // Default/mock data for pools (used as backup)
   pools = [
-    { pair: 'ETH/USDC', tvl: '$12.5M', reward: '0.3%' },
-    { pair: 'WBTC/USDT', tvl: '$8.2M', reward: '0.25%' },
-    { pair: 'SOL/USDC', tvl: '$5.7M', reward: '0.35%' }
+    { pair: 'cSOL / cUSDC', tvl: '10000 $', reward: '0.3%' },
+    { pair: 'cSOL / cUSDT', tvl: '$10000 $', reward: '0.25%' },
+    { pair: 'cSALE / cSOL', tvl: '5000 $', reward: '0.35%' },
+    { pair: 'cMNTL / cSOL', tvl: '5000 $', reward: '0.35%' }
   ];
 
   constructor(private walletService: WalletService, private cdr: ChangeDetectorRef) {}
@@ -49,7 +54,9 @@ export class PoolsComponent implements OnInit, OnDestroy {
     fetch('http://localhost:8888/pools')
       .then(res => res.json())
       .then(data => {
-        if (data && Array.isArray(data.pools) && data.pools.length > 0) {
+        console.log('Fetched pools:', data);
+        if (Array.isArray(data.pools) && data.pools.length > 0) {
+          console.log('Inside Fetched pools:', data.pools);
           this.pools = data.pools;
         }
         this.cdr.detectChanges();
@@ -107,14 +114,65 @@ export class PoolsComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleDeposit() {
-    const token1 = (document.getElementById('pool-token-1') as HTMLSelectElement).value;
-    const token2 = (document.getElementById('pool-token-2') as HTMLSelectElement).value;
-    const amount1 = (document.getElementById('pool-amount-1') as HTMLInputElement).value;
-    const amount2 = (document.getElementById('pool-amount-2') as HTMLInputElement).value;
+  onTokenOneChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedTokenOne = selectElement.value;
+    this.selectedTokenTwo = ''; // Reset token two when token one changes
+    // Set image for token one
+    const tokenImages: { [key: string]: string } = {
+      cSOL: 'assets/images/csol.png',
+      cSALE: 'assets/images/csale.png',
+      cMNTL: 'assets/images/cmntl.png'
+    };
+    this.selectedTokenOneImage = tokenImages[this.selectedTokenOne] || '';
+    this.selectedTokenTwoImage = '';
+    this.cdr.detectChanges();
+  }
 
-    if (!amount1 || !amount2 || +amount1 <= 0 || +amount2 <= 0) {
-      alert('Please enter valid amounts for both tokens');
+  onTokenTwoChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedTokenTwo = selectElement.value;
+    // Set image for token two
+    const tokenImages: { [key: string]: string } = {
+      cUSDC: 'assets/images/cusdc.png',
+      cUSDT: 'assets/images/cusdt.png',
+      cSOL: 'assets/images/csol.png'
+    };
+    this.selectedTokenTwoImage = tokenImages[this.selectedTokenTwo] || '';
+    this.cdr.detectChanges();
+  }
+
+  validateAmount(field: 'amount1' | 'amount2') {
+    if (field === 'amount1') {
+      this.amount1Invalid = !(this.amount1 !== null && this.amount1 >= 1 && this.amount1 <= 3000);
+    } else {
+      this.amount2Invalid = !(this.amount2 !== null && this.amount2 >= 1 && this.amount2 <= 3000);
+    }
+    this.cdr.detectChanges();
+  }
+
+  handleDeposit() {
+    const token1 = this.selectedTokenOne;
+    const token2 = this.selectedTokenTwo;
+    const amount1 = this.amount1;
+    const amount2 = this.amount2;
+
+    const allowedPairs = [
+      ['cSOL', 'cUSDC'],
+      ['cSOL', 'cUSDT'],
+      ['cSALE', 'cSOL'],
+      ['cMNTL', 'cSOL']
+    ];
+    if (!token1 || !token2 || !allowedPairs.some(([a, b]) => a === token1 && b === token2)) {
+      alert('Please select a valid token pair');
+      return;
+    }
+    if (
+      amount1 === null || amount2 === null ||
+      amount1 < 1 || amount1 > 3000 ||
+      amount2 < 1 || amount2 > 3000
+    ) {
+      alert('Amounts must be between 1 and 3000');
       return;
     }
 

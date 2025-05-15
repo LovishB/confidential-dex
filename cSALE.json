@@ -1,0 +1,15 @@
+{
+  "name": "Confidential DxSale",
+  "symbol": "cSALE",
+  "description": "Confidential private token of Dxsale platform",
+  "image": "https://sapphire-chemical-cattle-354.mypinata.cloud/ipfs/bafkreihhmqdsdklslwxkibqqnoi562etuv34a4ahe37tff5vuw4i6rgmja",
+  "properties": {
+    "files": [
+      {
+        "uri": "https://sapphire-chemical-cattle-354.mypinata.cloud/ipfs/bafkreihhmqdsdklslwxkibqqnoi562etuv34a4ahe37tff5vuw4i6rgmja",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Confidential Tether",
+  "symbol": "cUSDT",
+  "description": "Wrapped Confidential USDT for private stablecoin transactions.",
+  "image": "https://sapphire-chemical-cattle-354.mypinata.cloud/ipfs/bafkreibn4y6llleughtp5pgu37lve7mymvcffpo5i2h6iw4t4iwo6z5ocu",
+  "properties": {
+    "files": [
+      {
+        "uri": "https://sapphire-chemical-cattle-354.mypinata.cloud/ipfs/bafkreibn4y6llleughtp5pgu37lve7mymvcffpo5i2h6iw4t4iwo6z5ocu",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   template: `
     <div class="container">
       <div class="header">
-        <div class="logo">ShadowDEX</div>
+        <div class="logo">ConfiX</div>
         <nav class="nav">
           <a [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
           <a [routerLink]="['/swap']" routerLinkActive="active">Swap</a>

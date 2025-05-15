@@ -10,17 +10,21 @@
           <div class="swap-label">Token 1</div>
           <div class="input-row">
             <div class="amount-input">
-              <input type="number" id="pool-amount-1" placeholder="0">
+              <input type="number" id="pool-amount-1" placeholder="0" min="1" max="3000"
+                [(ngModel)]="amount1" (input)="validateAmount('amount1')">
+              <div *ngIf="amount1Invalid" class="input-warning">
+                Amount must be between 1 and 3000
+              </div>
             </div>
-  
             <div class="liquidity-token-select">
-              <img [src]="selectedTokenOneImage" alt="Token Logo" class="token-icon">
-              <select id="pool-token-1" [disabled]="!isWalletConnected" (change)="updateTokenOneImage($event)">
-                <option value="cSOL" data-image="assets/images/csol.png">cSOL</option>
-                <option value="cUSDT" data-image="assets/images/cusdt.png">cUSDT</option>
-                <option value="cUSDC" data-image="assets/images/cusdc.png">cUSDC</option>
-                <option value="cSALE" data-image="assets/images/csale.png">cSALE</option>
-                <option value="cMNTL" data-image="assets/images/cmntl.jpg">cMNTL</option>
+              <img *ngIf="selectedTokenOneImage && selectedTokenOne" [src]="selectedTokenOneImage" alt="Token Logo" class="token-icon">
+              <select id="pool-token-1"
+                      [disabled]="!isWalletConnected"
+                      (change)="onTokenOneChange($event)">
+                <option value="" disabled [selected]="!selectedTokenOne">Select</option>
+                <option value="cSOL">cSOL</option>
+                <option value="cSALE">cSALE</option>
+                <option value="cMNTL">cMNTL</option>
               </select>
             </div>
           </div>
@@ -29,16 +33,22 @@
           <div class="swap-label">Token 2</div>
           <div class="input-row">
             <div class="amount-input">
-              <input type="number" id="pool-amount-2" placeholder="0">
+              <input type="number" id="pool-amount-2" placeholder="0" min="1" max="3000"
+                [(ngModel)]="amount2" (input)="validateAmount('amount2')">
+              <div *ngIf="amount2Invalid" class="input-warning">
+                Amount must be between 1 and 3000
+              </div>
             </div>
             <div class="liquidity-token-select">
-              <img [src]="selectedTokenTwoImage" alt="Token Logo" class="token-icon">
-              <select id="pool-token-2" [disabled]="!isWalletConnected" (change)="updateTokenTwoImage($event)">
-                <option value="cSOL" data-image="assets/images/csol.png">cSOL</option>
-                <option value="cUSDT" data-image="assets/images/cusdt.png">cUSDT</option>
-                <option value="cUSDC" data-image="assets/images/cusdc.png">cUSDC</option>
-                <option value="cSALE" data-image="assets/images/csale.png">cSALE</option>
-                <option value="cMNTL" data-image="assets/images/cmntl.jpg">cMNTL</option>
+              <img *ngIf="selectedTokenTwoImage && selectedTokenTwo" [src]="selectedTokenTwoImage" alt="Token Logo" class="token-icon">
+              <select id="pool-token-2"
+                      [disabled]="!isWalletConnected || !selectedTokenOne"
+                      (change)="onTokenTwoChange($event)">
+                <option value="" disabled [selected]="!selectedTokenTwo">Select</option>
+                <option *ngIf="selectedTokenOne === 'cSOL'" value="cUSDC">cUSDC</option>
+                <option *ngIf="selectedTokenOne === 'cSOL'" value="cUSDT">cUSDT</option>
+                <option *ngIf="selectedTokenOne === 'cSALE'" value="cSOL">cSOL</option>
+                <option *ngIf="selectedTokenOne === 'cMNTL'" value="cSOL">cSOL</option>
               </select>
             </div>
           </div>
@@ -59,7 +69,7 @@
       </div>
     </div>
     <button class="deposit-button" (click)="handleDeposit()">Deposit</button>
-    <p class="pool-p">Confidential liquidity pools with Token-2022 enable private, encrypted liquity management on Solana through zero-knowledge proofs and confidential balances.</p>
+    <p class="pool-p">Confidential liquity management, rewards, minting. Encrypted using Token-2022 confidential balances.</p>
   </div>
 
   <div class="pools-header">
@@ -81,8 +91,24 @@
       <tr *ngFor="let pool of pools; let i = index">
         <td>{{ i + 1 }}</td>
         <td class="pool-pair">
-          <img src="https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694" alt="ETH">
-          {{ pool.pair }}
+          <ng-container *ngIf="pool.pair as pair">
+            <ng-container *ngFor="let symbol of pair.split('/'); let idx = index">
+              <img
+                [src]="{
+                  'cUSDC': 'assets/images/cusdc.png',
+                  'cUSDT': 'assets/images/cusdt.png',
+                  'SOL': 'assets/images/csol.png',
+                  'cSOL': 'assets/images/csol.png',
+                  'cSALE': 'assets/images/csale.png',
+                  'cMNTL': 'assets/images/cmntl.png'
+                }[symbol.trim()] || ''"
+                [alt]="symbol.trim()"
+                class="token-icon"
+                style="width:24px;height:24px;margin-right:2px;"
+              />
+            </ng-container>
+            {{ pair }}
+          </ng-container>
         </td>
         <td>{{ pool.tvl }}</td>
         <td>{{ pool.reward }}</td>

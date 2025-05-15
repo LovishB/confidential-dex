@@ -1,0 +1,15 @@
+{
+  "name": "Confidential AssetMantle",
+  "symbol": "cMNTL",
+  "description": "Confidential private token of AssetMantle platform",
+  "image": "https://sapphire-chemical-cattle-354.mypinata.cloud/ipfs/bafkreiaan3lxgizabrttuzkhc7hjqzmntjizgtoxotfe6znj5qnz6ghpny",
+  "properties": {
+    "files": [
+      {
+        "uri": "https://sapphire-chemical-cattle-354.mypinata.cloud/ipfs/bafkreiaan3lxgizabrttuzkhc7hjqzmntjizgtoxotfe6znj5qnz6ghpny",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

@@ -15,7 +15,7 @@
 .liquidity-inputs {
   display: flex;
   gap: 16px;
-  margin-bottom: 12px;
+  margin-bottom: 24px;
 }
 
 .liquidity-box {
@@ -93,6 +93,17 @@
   width: 24px;
   height: 24px;
   pointer-events: none;
+}
+
+.pool-pair .token-icon {
+  position: static;
+  left: unset;
+  top: unset;
+  transform: none;
+  margin-right: 4px;
+  width: 24px;
+  height: 24px;
+  pointer-events: auto;
 }
 
 select {
@@ -430,4 +441,11 @@ h3 {
   align-items: center;
   justify-content: center;
   min-width: 48px;
+}
+
+.input-warning {
+  color: #ff4d4f;
+  font-size: 13px;
+  margin-top: 2px;
+  margin-left: 4px;
 }

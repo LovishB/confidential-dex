@@ -1,0 +1,15 @@
+{
+  "name": "Confidential USD Coin",
+  "symbol": "cUSDC",
+  "description": "Wrapped Confidential USDC for private stablecoin transactions.",
+  "image": "https://sapphire-chemical-cattle-354.mypinata.cloud/ipfs/bafkreiev6flgstwgefqpaieahshidfhz4czgbvryxbtusqzwarmp4mmkfu",
+  "properties": {
+    "files": [
+      {
+        "uri": "https://sapphire-chemical-cattle-354.mypinata.cloud/ipfs/bafkreiev6flgstwgefqpaieahshidfhz4czgbvryxbtusqzwarmp4mmkfu",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

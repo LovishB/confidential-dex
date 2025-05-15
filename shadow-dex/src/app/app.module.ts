@@ -7,6 +7,7 @@ import { PoolsComponent } from './components/pools/pools.component';
 import { AppRoutingModule } from './app-routing.module'; // Add this import
 import { WalletService } from './services/wallet.service';
 import { TokenService } from './services/token.service';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { TokenService } from './services/token.service';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule // Add this line
+    AppRoutingModule, // Add this line
+    FormsModule
   ],
   providers: [
     WalletService,

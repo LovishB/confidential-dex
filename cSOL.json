@@ -1,0 +1,15 @@
+{
+  "name": "Confidential SOL",
+  "symbol": "cSOL",
+  "description": "Wrapped Confidential SOL enabling private transactions on Solana.",
+  "image": "https://sapphire-chemical-cattle-354.mypinata.cloud/ipfs/bafkreif46tmogu2xxpq6ynjc56t7gcmcjklfneimuxmohmd5i5j7tqn6fi",
+  "properties": {
+    "files": [
+      {
+        "uri": "https://sapphire-chemical-cattle-354.mypinata.cloud/ipfs/bafkreif46tmogu2xxpq6ynjc56t7gcmcjklfneimuxmohmd5i5j7tqn6fi",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

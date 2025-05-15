@@ -1,9 +1,13 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ExecuteSolanaCliService } from './execute-solana-cli.service';
+import { Web3SolanaService } from './web3-solana.service';
 
 @Injectable()
 export class SwapService {
-  constructor(private readonly executeSolanaCliService: ExecuteSolanaCliService) {}
+  constructor(
+    private readonly executeSolanaCliService: ExecuteSolanaCliService,
+    private readonly web3SolanaService: Web3SolanaService
+  ) {}
   
   /**
    * Execute a token swap operation
@@ -43,6 +47,15 @@ export class SwapService {
         estimatedTokenOutAmount,
         userWalletPubKey
       );
+
+      // Update Liquidity pool reserves onchain
+      const swapTx = await this.web3SolanaService.swapLiquidity(
+        tokenInMintAddress,
+        tokenOutMintAddress,
+        tokenInAmount
+      );
+
+      console.log('Swap transaction:', swapTx);
       
       return {
         success: true,
@@ -76,28 +89,31 @@ export class SwapService {
     tokenInAmount: number
   ): Promise<number> {
     try {
-      // TODO: Implement actual AMM calculation logic
-      // This would typically:
-      // 1. Get the current reserves from the liquidity pool
-      // 2. Apply the appropriate AMM formula (e.g., constant product formula x*y=k)
-      // 3. Calculate the expected output amount including fees
-    
-      
-      // Placeholder calculation (replace with actual AMM formula)
-      // Example with 0.3% fee like Uniswap
-      const fee = 0.003;
-      const inputWithFee = tokenInAmount * (1 - fee);
+      // Fetch pool size (reserves)
+      const pool = await this.web3SolanaService.getPoolSize(tokenInMintAddress, tokenOutMintAddress);
+      const reserveA = Number(pool.tokenAAmount);
+      const reserveB = Number(pool.tokenBAmount);
 
+      if (reserveA === 0 || reserveB === 0) {
+        return 0;
+      }
+
+      // Deduct fee from Token A 0.3% fee (997/1000)
+      const tokenAWithFee = tokenInAmount * 997;
+      const numerator = tokenAWithFee * reserveB;
+      const denominator = reserveA * 1000 + tokenAWithFee;
+      const amountOut = Math.floor(numerator / denominator);
+    
       console.log('Getting quote for swap:', {
         tokenInMintAddress,
         tokenOutMintAddress,
+        reserveA,
+        reserveB,
         tokenInAmount,
-        tokenOutAmount: inputWithFee * 0.9 // Placeholder for output amount
+        tokenOutAmount: amountOut
       });
       
-      // Placeholder for actual calculation
-      return inputWithFee * 0.9;
-      
+       return amountOut; 
     } catch (error) {
       console.error('Error getting quote:', error);
       throw new InternalServerErrorException(

@@ -5,16 +5,24 @@
     <div class="input-row">
       <div class="amount-input">
         <input type="number" id="from-amount" placeholder="0" [disabled]="!isWalletConnected"
-          [value]="fromAmount" (input)="onFromAmountChange($event)">
+          [value]="fromAmount" (input)="onFromAmountChange($event)"
+          [attr.max]="getMaxForCurrentPair()" [attr.min]="getMinForCurrentToken()">
+        <div *ngIf="fromAmount && (+fromAmount > getMaxForCurrentPair() || +fromAmount < getMinForCurrentToken())" class="input-warning">
+          <ng-container *ngIf="+fromAmount > getMaxForCurrentPair()">
+            Maximum allowed is {{ getMaxForCurrentPair() }} {{ fromToken }}
+          </ng-container>
+          <ng-container *ngIf="+fromAmount < getMinForCurrentToken()">
+            Minimum allowed is {{ getMinForCurrentToken() }} {{ fromToken }}
+          </ng-container>
+        </div>
       </div>
       <div class="token-select">
         <img [src]="selectedFromTokenImage" alt="Token Logo" class="token-icon">
         <select id="from-token" [disabled]="!isWalletConnected" (change)="onFromTokenChange($event)">
+          <option value="" disabled selected>Select</option>
           <option value="cSOL" data-image="assets/images/csol.png">cSOL</option>
-          <option value="cUSDT" data-image="assets/images/cusdt.png">cUSDT</option>
-          <option value="cUSDC" data-image="assets/images/cusdc.png">cUSDC</option>
           <option value="cSALE" data-image="assets/images/csale.png">cSALE</option>
-          <option value="cMNTL" data-image="assets/images/cmntl.jpg">cMNTL</option>
+          <option value="cMNTL" data-image="assets/images/cmntl.png">cMNTL</option>
         </select>
       </div>
     </div>
@@ -23,24 +31,29 @@
     <div class="swap-label">Buy</div>
     <div class="input-row">
       <div class="amount-input">
-        <input type="number" id="to-amount" placeholder="0" readonly [disabled]="!isWalletConnected"
+        <input type="text" id="to-amount" placeholder="0" readonly [disabled]="!isWalletConnected"
           [value]="toAmount">
       </div>
       <div class="token-select">
         <img [src]="selectedToTokenImage" alt="Token Logo" class="token-icon">
         <select id="to-token" [disabled]="!isWalletConnected" (change)="onToTokenChange($event)">
-          <option value="cSOL" data-image="assets/images/csol.png">cSOL</option>
-          <option value="cUSDT" data-image="assets/images/cusdt.png">cUSDT</option>
-          <option value="cUSDC" data-image="assets/images/cusdc.png">cUSDC</option>
-          <option value="cSALE" data-image="assets/images/csale.png">cSALE</option>
-          <option value="cMNTL" data-image="assets/images/cmntl.jpg">cMNTL</option>
+          <option *ngFor="let token of getAllowedToTokens()" [value]="token" [selected]="token === toToken"
+            [attr.data-image]="
+              token === 'cSOL' ? 'assets/images/csol.png' :
+              token === 'cUSDT' ? 'assets/images/cusdt.png' :
+              token === 'cUSDC' ? 'assets/images/cusdc.png' :
+              token === 'cSALE' ? 'assets/images/csale.png' :
+              token === 'cMNTL' ? 'assets/images/cmntl.png' : ''
+            ">
+            {{ token }}
+          </option>
         </select>
       </div>
     </div>
   </div>
   <button class="swap-button" *ngIf="isWalletConnected" (click)="handleSwap()">Swap</button>
   <button class="swap-button connect-button" *ngIf="!isWalletConnected" (click)="connectWallet()">Connect Wallet</button>
-  <p>Swap is powered by Token-2022 Confidential Balances. Transaction amounts are encrypted using zk-proofs, while maintaining on-chain verifiability</p>
+  <p>Swap is powered by Token-2022 Confidential Balances. Trade amounts are hidden using zk-proofs, while maintaining on-chain verifiability</p>
 </div>
 <div *ngIf="loading" class="loading-overlay">
   <div class="loading-modal loading-flex">
@@ -120,5 +133,30 @@
       <h3>Swap Failed</h3>
       <p>{{ swapError }}</p>
     </ng-container>
+    <div class="countdown-timer" style="text-align:center; color:#fff; font-size:1.2rem; margin-bottom:10px;">
+      Time left: {{ countdown }}s
+    </div>
+  </div>
+</div>
+<div *ngIf="showLimitPopup" class="loading-overlay">
+  <div class="loading-modal" style="min-width:320px; min-height:120px;">
+    <div class="modal-header-row">
+      <div class="modal-header-spacer"></div>
+      <div class="loading-modal-header">Swap Limit Exceeded</div>
+      <button class="close-x" (click)="closeLimitPopup()" aria-label="Close">
+        <svg width="26" height="26" viewBox="0 0 20 20">
+          <line x1="5" y1="5" x2="15" y2="15" stroke="#9945FF" stroke-width="2" stroke-linecap="round"/>
+          <line x1="15" y1="5" x2="5" y2="15" stroke="#9945FF" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div style="margin-top:24px; color:#fff; font-size:1.1rem;">
+      <ng-container *ngIf="+fromAmount > getMaxForCurrentPair()">
+        The maximum allowed per transaction is {{ getMaxForCurrentPair() }} {{ fromToken }}.
+      </ng-container>
+      <ng-container *ngIf="+fromAmount < getMinForCurrentToken()">
+        The minimum allowed per transaction is {{ getMinForCurrentToken() }} {{ fromToken }}.
+      </ng-container>
+    </div>
   </div>
 </div>

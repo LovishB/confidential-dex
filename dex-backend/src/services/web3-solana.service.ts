@@ -10,7 +10,7 @@ export class Web3SolanaService {
   private programId: PublicKey;
 
   constructor() {
-    const rpcUrl = 'https://api.devnet.solana.com';
+    const rpcUrl = 'https://solana-devnet.g.alchemy.com/v2/KfeSu5q27FaoFJqNzanj3VemrijlRuUM';
     this.connection = new Connection(rpcUrl, 'confirmed');
     const secretKeyBase58 = '2Lj4pN9wTRyr729x3H5B2FNuzhTh9njbDaNqjHoSzQaCrSy4GVpRakq2cpPfukf9TpdqE3SnAdk1hvXNm81VfaWx';
     this.keypair = Keypair.fromSecretKey(bs58.decode(secretKeyBase58));
@@ -132,7 +132,6 @@ export class Web3SolanaService {
       const tokenAAmountBN = new anchor.BN(tokenAAmount);
       const tokenBAmountBN = new anchor.BN(tokenBAmount);
 
-      // Build the transaction
       const tx = await program.methods
         .depositLiquidity(
           tokenAAmountBN, 
@@ -142,17 +141,30 @@ export class Web3SolanaService {
           pool: poolPda,
           user: this.keypair.publicKey,
         })
-        .signers([this.keypair])
-        .rpc();
+        .transaction();
 
-      return tx; // Returns the transaction signature
+      const { blockhash } = await this.connection.getLatestBlockhash();
+      tx.recentBlockhash = blockhash;
+      tx.feePayer = this.keypair.publicKey;
+      
+      tx.sign(this.keypair);
+
+      const rawTx = tx.serialize();
+      const txSig = await this.connection.sendRawTransaction(rawTx, {
+        skipPreflight: false,
+      });
+
+      // Confirm using polling
+      await this.confirmTransaction(txSig);
+
+      return txSig; // Returns the transaction signature
     } catch (error) {
       console.error("Error depositing liquidity:", error);
       throw new Error("Failed to deposit liquidity");
     }
   }
 
-  async swap(
+  async swapLiquidity(
     tokenAMint: string,
     tokenBMint: string,
     tokenAAmount: number
@@ -175,20 +187,50 @@ export class Web3SolanaService {
       // Convert amount to BN (Big Number) as expected by Anchor
       const tokenAAmountBN = new anchor.BN(tokenAAmount);
 
-      // Build the transaction
       const tx = await program.methods
-        .swap(tokenAAmountBN)
-        .accounts({
-          pool: poolPda,
-          user: this.keypair.publicKey,
-        })
-        .signers([this.keypair])
-        .rpc();
+      .swap(tokenAAmountBN)
+      .accounts({
+        pool: poolPda,
+        user: this.keypair.publicKey,
+      })
+      .transaction();
 
-      return tx; // Returns the transaction signature
+      const { blockhash } = await this.connection.getLatestBlockhash();
+      tx.recentBlockhash = blockhash;
+      tx.feePayer = this.keypair.publicKey;
+      
+      tx.sign(this.keypair);
+
+      const rawTx = tx.serialize();
+      const txSig = await this.connection.sendRawTransaction(rawTx, {
+        skipPreflight: false,
+      });
+
+      // Confirm using polling
+      await this.confirmTransaction(txSig);
+
+      return txSig; // Returns the transaction signature
     } catch (error) {
       console.error("Error executing swap:", error);
       throw new Error("Failed to execute swap");
     }
+  }
+
+  private async confirmTransaction(signature: string): Promise<void> {
+    let retries = 10;
+    while (retries > 0) {
+      try {
+        const result = await this.connection.getSignatureStatus(signature);
+        if (result.value?.confirmationStatus === 'confirmed' || 
+            result.value?.confirmationStatus === 'finalized') {
+          return;
+        }
+      } catch (e) {
+        console.log('Error confirming transaction:', e);
+      }
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      retries--;
+    }
+    throw new Error('Transaction confirmation timed out');
   }
 }

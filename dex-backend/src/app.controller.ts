@@ -17,8 +17,15 @@ export class AppController {
   }
 
   @Get('pools')
-  getPools() {
-    return { pools: this.liquidityPoolService.getPools() };
+  async getPools() {
+    const pools = await this.liquidityPoolService.getPools();
+    if (!pools || pools.length === 0) {
+      return {
+        message: 'No pools available',
+        pools: []
+      };
+    } 
+    return { pools };
   }
 
   @Post('quote')
@@ -127,6 +134,6 @@ export class AppController {
     }
   ) {
     const { tokenAMintAddress, tokenBMintAddress, tokenAAmount } = body;
-    return this.web3SolanaService.swap(tokenAMintAddress, tokenBMintAddress, tokenAAmount);
+    return this.web3SolanaService.swapLiquidity(tokenAMintAddress, tokenBMintAddress, tokenAAmount);
   }
 }
