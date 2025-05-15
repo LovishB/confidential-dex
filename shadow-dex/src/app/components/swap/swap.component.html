@@ -4,7 +4,7 @@
     <div class="swap-label">Sell</div>
     <div class="input-row">
       <div class="amount-input">
-        <input type="number" id="from-amount" placeholder="0" [disabled]="!isWalletConnected"
+        <input type="number" id="from-amount" placeholder="0"
           [value]="fromAmount" (input)="onFromAmountChange($event)"
           [attr.max]="getMaxForCurrentPair()" [attr.min]="getMinForCurrentToken()">
         <div *ngIf="fromAmount && (+fromAmount > getMaxForCurrentPair() || +fromAmount < getMinForCurrentToken())" class="input-warning">
@@ -18,7 +18,7 @@
       </div>
       <div class="token-select">
         <img [src]="selectedFromTokenImage" alt="Token Logo" class="token-icon">
-        <select id="from-token" [disabled]="!isWalletConnected" (change)="onFromTokenChange($event)">
+        <select id="from-token" (change)="onFromTokenChange($event)">
           <option value="" disabled selected>Select</option>
           <option value="cSOL" data-image="assets/images/csol.png">cSOL</option>
           <option value="cSALE" data-image="assets/images/csale.png">cSALE</option>
@@ -31,12 +31,12 @@
     <div class="swap-label">Buy</div>
     <div class="input-row">
       <div class="amount-input">
-        <input type="text" id="to-amount" placeholder="0" readonly [disabled]="!isWalletConnected"
+        <input type="text" id="to-amount" placeholder="0" readonly
           [value]="toAmount">
       </div>
       <div class="token-select">
         <img [src]="selectedToTokenImage" alt="Token Logo" class="token-icon">
-        <select id="to-token" [disabled]="!isWalletConnected" (change)="onToTokenChange($event)">
+        <select id="to-token" (change)="onToTokenChange($event)">
           <option *ngFor="let token of getAllowedToTokens()" [value]="token" [selected]="token === toToken"
             [attr.data-image]="
               token === 'cSOL' ? 'assets/images/csol.png' :
@@ -51,8 +51,7 @@
       </div>
     </div>
   </div>
-  <button class="swap-button" *ngIf="isWalletConnected" (click)="handleSwap()">Swap</button>
-  <button class="swap-button connect-button" *ngIf="!isWalletConnected" (click)="connectWallet()">Connect Wallet</button>
+  <button class="swap-button" (click)="handleSwap()">Swap</button>
   <p>Swap is powered by Token-2022 Confidential Balances. Trade amounts are hidden using zk-proofs, while maintaining on-chain verifiability</p>
 </div>
 <div *ngIf="loading" class="loading-overlay">

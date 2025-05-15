@@ -107,11 +107,12 @@ export class PoolsComponent implements OnInit, OnDestroy {
   }
 
   toggleAddLiquidity() {
-    if (!this.isWalletConnected) {
-      this.connectWallet();
-    } else {
-      this.showAddLiquidity = !this.showAddLiquidity;
-    }
+    // if (!this.isWalletConnected) {
+    //   this.connectWallet();
+    // } else {
+    //   this.showAddLiquidity = !this.showAddLiquidity;
+    // }
+     this.showAddLiquidity = !this.showAddLiquidity;
   }
 
   onTokenOneChange(event: Event): void {
