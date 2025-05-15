@@ -10,25 +10,34 @@ export class Web3SolanaService {
   private programId: PublicKey;
 
   constructor() {
-    const rpcUrl = 'https://solana-devnet.g.alchemy.com/v2/KfeSu5q27FaoFJqNzanj3VemrijlRuUM';
-    this.connection = new Connection(rpcUrl, 'confirmed');
-    const secretKeyBase58 = '2Lj4pN9wTRyr729x3H5B2FNuzhTh9njbDaNqjHoSzQaCrSy4GVpRakq2cpPfukf9TpdqE3SnAdk1hvXNm81VfaWx';
-    this.keypair = Keypair.fromSecretKey(bs58.decode(secretKeyBase58));
-    const wallet = new anchor.Wallet(this.keypair);
-    const opts: ConfirmOptions = {
-      skipPreflight: false,
-      commitment: 'confirmed',
-      preflightCommitment: 'confirmed',
-    };
-    this.provider = new anchor.AnchorProvider(this.connection, wallet, opts);
-    anchor.setProvider(this.provider);
-    this.programId = new PublicKey('Ez9BYqZrJqo1TCqHKfAzWUBZpabrCLMvpe9fEV7BxhJP');
+    try {
+      const rpcUrl = 'https://solana-devnet.g.alchemy.com/v2/KfeSu5q27FaoFJqNzanj3VemrijlRuUM';
+      this.connection = new Connection(rpcUrl, 'confirmed');
+      const secretKeyBase58 = '2Lj4pN9wTRyr729x3H5B2FNuzhTh9njbDaNqjHoSzQaCrSy4GVpRakq2cpPfukf9TpdqE3SnAdk1hvXNm81VfaWx';
+      this.keypair = Keypair.fromSecretKey(bs58.decode(secretKeyBase58));
+      const wallet = new anchor.Wallet(this.keypair);
+      const opts: ConfirmOptions = {
+        skipPreflight: false,
+        commitment: 'confirmed',
+        preflightCommitment: 'confirmed',
+      };
+      this.provider = new anchor.AnchorProvider(this.connection, wallet, opts);
+      anchor.setProvider(this.provider);
+      this.programId = new PublicKey('Ez9BYqZrJqo1TCqHKfAzWUBZpabrCLMvpe9fEV7BxhJP');
+    } catch (error) {
+      console.error("Error initializing Web3SolanaService:", error);
+    }
   }
 
   // Example: Get account balance
   async getBalance(publicKey: string): Promise<number> {
-    const key = new PublicKey(publicKey);
-    return await this.connection.getBalance(key);
+    try {
+      const key = new PublicKey(publicKey);
+      return await this.connection.getBalance(key);
+    } catch (error) {
+      console.error("Error getting balance:", error);
+      throw new Error("Failed to get balance");
+    }
   }
 
   /**
@@ -43,36 +52,36 @@ export class Web3SolanaService {
     tokenBMint: string
   ): Promise<string> {
     try {
-    const idl = JSON.parse(fs.readFileSync('./src/idl/multi_pool_amm.json', 'utf8'));
-    if (!idl) {
+      const idl = JSON.parse(fs.readFileSync('./src/idl/multi_pool_amm.json', 'utf8'));
+      if (!idl) {
         throw new Error("Failed to fetch IDL for the program.");
-    }
-    const program = new anchor.Program(idl, this.provider);
+      }
+      const program = new anchor.Program(idl, this.provider);
 
-    const tokenAMintPk = new PublicKey(tokenAMint);
-    const tokenBMintPk = new PublicKey(tokenBMint);
+      const tokenAMintPk = new PublicKey(tokenAMint);
+      const tokenBMintPk = new PublicKey(tokenBMint);
 
-    const [poolPda] = anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from('pool'), tokenAMintPk.toBuffer(), tokenBMintPk.toBuffer()],
-      this.programId
-    );
+      const [poolPda] = anchor.web3.PublicKey.findProgramAddressSync(
+        [Buffer.from('pool'), tokenAMintPk.toBuffer(), tokenBMintPk.toBuffer()],
+        this.programId
+      );
 
-    // Build the transaction
-    const tx = await program.methods
-      .initializePool(
-        new PublicKey(tokenAMint),
-        new PublicKey(tokenBMint)
-      )
-      .accounts({
-        pool: poolPda,
-        user: this.keypair.publicKey,
-        systemProgram: anchor.web3.SystemProgram.programId,
-        program: this.programId
-      })
-      .signers([this.keypair])
-      .rpc();
+      // Build the transaction
+      const tx = await program.methods
+        .initializePool(
+          new PublicKey(tokenAMint),
+          new PublicKey(tokenBMint)
+        )
+        .accounts({
+          pool: poolPda,
+          user: this.keypair.publicKey,
+          systemProgram: anchor.web3.SystemProgram.programId,
+          program: this.programId
+        })
+        .signers([this.keypair])
+        .rpc();
 
-    return tx; // Returns the transaction signature
+      return tx; // Returns the transaction signature
     } catch (error) {
       console.error("Error initializing pool:", error);
       throw new Error("Failed to initialize pool");
@@ -217,20 +226,25 @@ export class Web3SolanaService {
   }
 
   private async confirmTransaction(signature: string): Promise<void> {
-    let retries = 10;
-    while (retries > 0) {
-      try {
-        const result = await this.connection.getSignatureStatus(signature);
-        if (result.value?.confirmationStatus === 'confirmed' || 
-            result.value?.confirmationStatus === 'finalized') {
-          return;
+    try {
+      let retries = 10;
+      while (retries > 0) {
+        try {
+          const result = await this.connection.getSignatureStatus(signature);
+          if (result.value?.confirmationStatus === 'confirmed' || 
+              result.value?.confirmationStatus === 'finalized') {
+            return;
+          }
+        } catch (e) {
+          console.log('Error confirming transaction:', e);
         }
-      } catch (e) {
-        console.log('Error confirming transaction:', e);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        retries--;
       }
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      retries--;
+      throw new Error('Transaction confirmation timed out');
+    } catch (error) {
+      console.error("Error in confirmTransaction:", error);
+      throw new Error("Failed to confirm transaction");
     }
-    throw new Error('Transaction confirmation timed out');
   }
 }

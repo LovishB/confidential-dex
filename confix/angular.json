@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "defaultProject": "confix",
   "newProjectRoot": "projects",
   "projects": {
     "confix": {
@@ -94,7 +95,6 @@
       }
     }
   },
-  "defaultProject": "confix",
   "cli": {
     "analytics": false
   }

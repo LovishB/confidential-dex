@@ -44,28 +44,32 @@ export class ExecuteSolanaCliService {
         tokenOutAmount: number,
         userWalletPubKey: string
     ): Promise<{ inputSignature: string; outputSignature: string }> {
-        await this.changeConfig('USER');
+        try {
+            await this.changeConfig('USER');
 
-        const cmdGetALMATA = `spl-token address --verbose --owner ${this.ALMPubKey} --token ${tokenInMintAddress}`;
-        const almATA = (await this.runAssociatedAccountCommand(cmdGetALMATA)).associatedTokenAddress;
+            const cmdGetALMATA = `spl-token address --verbose --owner ${this.ALMPubKey} --token ${tokenInMintAddress}`;
+            const almATA = (await this.runAssociatedAccountCommand(cmdGetALMATA)).associatedTokenAddress;
 
-        const cmdTransferUserToAMM = `spl-token transfer ${tokenInMintAddress} ${tokenInAmount} ${almATA} --confidential`;
-        const signatureInput = (await this.runConfidentialTransferCommand(cmdTransferUserToAMM)).signature;
-        console.log(`Input Signature: ${signatureInput}`);
+            const cmdTransferUserToAMM = `spl-token transfer ${tokenInMintAddress} ${tokenInAmount} ${almATA} --confidential`;
+            const signatureInput = (await this.runConfidentialTransferCommand(cmdTransferUserToAMM)).signature;
+            console.log(`Input Signature: ${signatureInput}`);
 
-        await this.changeConfig('AMM');
+            await this.changeConfig('AMM');
 
-        const cmdGetUSERATA = `spl-token address --verbose --owner ${userWalletPubKey} --token ${tokenOutMintAddress}`;
-        const userATA = (await this.runAssociatedAccountCommand(cmdGetUSERATA)).associatedTokenAddress;
+            const cmdGetUSERATA = `spl-token address --verbose --owner ${userWalletPubKey} --token ${tokenOutMintAddress}`;
+            const userATA = (await this.runAssociatedAccountCommand(cmdGetUSERATA)).associatedTokenAddress;
 
-        const cmdTransferAMMToUser = `spl-token transfer ${tokenOutMintAddress} ${tokenOutAmount} ${userATA} --confidential`;
-        const signatureOutput = (await this.runConfidentialTransferCommand(cmdTransferAMMToUser)).signature;
-        console.log(`Output Signature: ${signatureOutput}`);
+            const cmdTransferAMMToUser = `spl-token transfer ${tokenOutMintAddress} ${tokenOutAmount} ${userATA} --confidential`;
+            const signatureOutput = (await this.runConfidentialTransferCommand(cmdTransferAMMToUser)).signature;
+            console.log(`Output Signature: ${signatureOutput}`);
 
-        return {
-            inputSignature: signatureInput ?? (() => { throw new Error('Input signature is undefined'); })(),
-            outputSignature: signatureOutput ?? (() => { throw new Error('Input signature is undefined'); })()
-        };
+            return {
+                inputSignature: signatureInput ?? (() => { throw new Error('Input signature is undefined'); })(),
+                outputSignature: signatureOutput ?? (() => { throw new Error('Input signature is undefined'); })()
+            };
+        } catch (error) {
+            throw new Error(`Failed to execute swap: ${error.message}`);
+        }
     }
 
     async executeDeposit(
@@ -74,27 +78,29 @@ export class ExecuteSolanaCliService {
         tokenAAmount: number,
         tokenBAmount: number
     ): Promise<{ signatureTokenATransfer: string; signatureTokenBTransfer: string }>  {
-        await this.changeConfig('USER');
+        try {
+            await this.changeConfig('USER');
 
-        const cmdGetTokenAAccount = `spl-token address --verbose --owner ${this.ALMPubKey} --token ${tokenAMintAddress}`;
-        const tokenAATA = (await this.runAssociatedAccountCommand(cmdGetTokenAAccount)).associatedTokenAddress;
-        const cmdTransferTokenAUserToAMM = `spl-token transfer ${tokenAMintAddress} ${tokenAAmount} ${tokenAATA} --confidential`;
-        const signatureTokenATransfer = (await this.runConfidentialTransferCommand(cmdTransferTokenAUserToAMM)).signature;
-        console.log(`TokenA Signature: ${signatureTokenATransfer}`);
+            const cmdGetTokenAAccount = `spl-token address --verbose --owner ${this.ALMPubKey} --token ${tokenAMintAddress}`;
+            const tokenAATA = (await this.runAssociatedAccountCommand(cmdGetTokenAAccount)).associatedTokenAddress;
+            const cmdTransferTokenAUserToAMM = `spl-token transfer ${tokenAMintAddress} ${tokenAAmount} ${tokenAATA} --confidential`;
+            const signatureTokenATransfer = (await this.runConfidentialTransferCommand(cmdTransferTokenAUserToAMM)).signature;
+            console.log(`TokenA Signature: ${signatureTokenATransfer}`);
 
-        const cmdGetTokenBAccount = `spl-token address --verbose --owner ${this.ALMPubKey} --token ${tokenBMintAddress}`;
-        const tokenBATA = (await this.runAssociatedAccountCommand(cmdGetTokenBAccount)).associatedTokenAddress;
-        const cmdTransferTokenBUserToAMM = `spl-token transfer ${tokenBMintAddress} ${tokenBAmount} ${tokenBATA} --confidential`;
-        const signatureTokenBTransfer = (await this.runConfidentialTransferCommand(cmdTransferTokenBUserToAMM)).signature;
-        console.log(`TokenAB Signature: ${signatureTokenBTransfer}`);
+            const cmdGetTokenBAccount = `spl-token address --verbose --owner ${this.ALMPubKey} --token ${tokenBMintAddress}`;
+            const tokenBATA = (await this.runAssociatedAccountCommand(cmdGetTokenBAccount)).associatedTokenAddress;
+            const cmdTransferTokenBUserToAMM = `spl-token transfer ${tokenBMintAddress} ${tokenBAmount} ${tokenBATA} --confidential`;
+            const signatureTokenBTransfer = (await this.runConfidentialTransferCommand(cmdTransferTokenBUserToAMM)).signature;
+            console.log(`TokenAB Signature: ${signatureTokenBTransfer}`);
 
-
-        return {
-            signatureTokenATransfer: signatureTokenATransfer ?? (() => { throw new Error('Input signature is undefined'); })(),
-            signatureTokenBTransfer: signatureTokenBTransfer ?? (() => { throw new Error('Input signature is undefined'); })()
-        };
+            return {
+                signatureTokenATransfer: signatureTokenATransfer ?? (() => { throw new Error('Input signature is undefined'); })(),
+                signatureTokenBTransfer: signatureTokenBTransfer ?? (() => { throw new Error('Input signature is undefined'); })()
+            };
+        } catch (error) {
+            throw new Error(`Failed to execute deposit: ${error.message}`);
+        }
     }
-
 
     async runConfidentialTransferCommand(command: string): Promise<{ output: string; signature?: string }> {
         try {
@@ -118,7 +124,7 @@ export class ExecuteSolanaCliService {
             
             return { output: stdout, signature };
         } catch (error) {
-            throw new Error(`Failed to execute command: ${error.message}`);
+            throw new Error(`Failed to execute confidential transfer command: ${error.message}`);
         }
     }
 
@@ -160,7 +166,7 @@ export class ExecuteSolanaCliService {
             }
             return { output: stdout };
         } catch (error) {
-            throw new Error(`Failed to execute command: ${error.message}`);
+            throw new Error(`Failed to execute change solana config command: ${error.message}`);
         }
     }
 

@@ -8,7 +8,7 @@ export class SwapService {
     private readonly executeSolanaCliService: ExecuteSolanaCliService,
     private readonly web3SolanaService: Web3SolanaService
   ) {}
-  
+
   /**
    * Execute a token swap operation
    * @param tokenInMintAddress The mint address of the input token
@@ -31,11 +31,11 @@ export class SwapService {
         tokenInAmount,
         userWalletPubKey
       });
-        
+
       // Calculate tokens to receive based on AMM formula
       const estimatedTokenOutAmount = await this.getQuote(
-        tokenInMintAddress, 
-        tokenOutMintAddress, 
+        tokenInMintAddress,
+        tokenOutMintAddress,
         tokenInAmount
       );
 
@@ -56,7 +56,7 @@ export class SwapService {
       );
 
       console.log('Swap transaction:', swapTx);
-      
+
       return {
         success: true,
         tokenInMintAddress,
@@ -103,7 +103,7 @@ export class SwapService {
       const numerator = tokenAWithFee * reserveB;
       const denominator = reserveA * 1000 + tokenAWithFee;
       const amountOut = Math.floor(numerator / denominator);
-    
+
       console.log('Getting quote for swap:', {
         tokenInMintAddress,
         tokenOutMintAddress,
@@ -112,8 +112,8 @@ export class SwapService {
         tokenInAmount,
         tokenOutAmount: amountOut
       });
-      
-       return amountOut; 
+
+      return amountOut;
     } catch (error) {
       console.error('Error getting quote:', error);
       throw new InternalServerErrorException(
