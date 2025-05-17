@@ -1,6 +1,6 @@
 # Confidential DEX Monorepo
 
-This repository contains a full-stack confidential decentralized exchange (DEX) project on Solana, featuring confidential swaps and liquidity pools using zero-knowledge proofs and Token-2022 confidential balances.
+This repository contains a confidential decentralized exchange (DEX) project on Solana, featuring confidential swaps and liquidity pools using Token-2022 confidential balances.
 
 ## Project Structure
 
